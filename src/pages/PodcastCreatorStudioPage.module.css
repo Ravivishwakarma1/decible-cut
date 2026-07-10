@@ -1,0 +1,1382 @@
+/* ============================================================
+   DecibelCut — Podcast Studio Stylesheet
+   ============================================================ */
+
+.containerPage {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ---- Header ---- */
+.header {
+  height: 56px;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.backBtn {
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  padding: 5px 12px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.backBtn:hover {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border-color: var(--color-accent);
+}
+
+.logoMark {
+  font-size: 16px;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+}
+
+.logoText {
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.moduleBadge {
+  background: var(--color-accent-alpha);
+  border: 1px solid rgba(124, 111, 247, 0.3);
+  color: var(--color-accent-light);
+  font-size: 0.7rem;
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navLink {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.navLink:hover {
+  color: var(--color-text-primary);
+}
+
+/* ---- DAW Layout ---- */
+.dawLayout {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .dawLayout { flex-direction: column; }
+}
+
+/* ---- DAW Sidebar ---- */
+.dawSidebar {
+  width: var(--sidebar-width);
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  .dawSidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--color-border); }
+}
+
+.sidebarBlock {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blockTitleHeader {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.projectsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.projectItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-secondary);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.projectItem:hover {
+  border-color: var(--color-border);
+}
+
+.projectItemActive {
+  background: var(--color-accent-alpha);
+  border-color: rgba(124, 111, 247, 0.4);
+}
+
+.projectTextName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.projectItemArchived .projectTextName {
+  color: var(--color-text-tertiary);
+  text-decoration: line-through;
+}
+
+.projectItemActions {
+  display: flex;
+  gap: 4px;
+}
+
+.projectItemActions button {
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 2px;
+}
+
+.projectItemActions button:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.projectItemActions .deleteIconBtn:hover {
+  color: var(--color-error);
+}
+
+.newProjBtn {
+  background: var(--color-accent-alpha);
+  border: 1px dashed var(--color-accent);
+  color: var(--color-accent-light);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all var(--transition-fast);
+}
+
+.newProjBtn:hover {
+  background: var(--color-accent);
+  color: #fff;
+  border-style: solid;
+}
+
+.libraryUploadControls {
+  display: flex;
+  gap: 6px;
+}
+
+.selectWrapperAsset {
+  position: relative;
+  flex: 1;
+}
+
+.selectWrapperAsset select {
+  width: 100%;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-size: 0.78rem;
+  padding: 4px 20px 4px 8px;
+  border-radius: var(--radius-sm);
+  appearance: none;
+  cursor: pointer;
+}
+
+.assetUploadBtn {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-sm);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.assetUploadBtn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent-light);
+}
+
+.libraryAssetsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.libraryAssetItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-sm);
+  font-size: 0.76rem;
+}
+
+.assetItemLeft {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 130px;
+}
+
+.assetPlayIcon {
+  color: var(--color-accent);
+  cursor: pointer;
+}
+
+.assetName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.assetItemActions {
+  display: flex;
+  gap: 4px;
+}
+
+.assetItemActions button {
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  padding: 2px;
+}
+
+.assetItemActions button:hover {
+  color: var(--color-text-primary);
+}
+
+.assetItemActions .deleteIconBtn:hover {
+  color: var(--color-error);
+}
+
+.emptyLibraryText {
+  font-size: 0.7rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.35;
+  text-align: center;
+  margin: 0;
+}
+
+.cloudPickerTrigger {
+  width: 100%;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cloudPickerTrigger:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+/* ---- DAW Workspace Editor ---- */
+.dawWorkspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.workspaceBodyContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.studioControlsHeader {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.playbackControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.playBtn,
+.playBtnActive,
+.stopBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.playBtn {
+  background: var(--color-accent);
+  border: none;
+  color: #fff;
+}
+
+.playBtn:hover {
+  background: var(--color-accent-light);
+}
+
+.playBtnActive {
+  background: var(--color-success);
+  border: none;
+  color: #fff;
+  animation: pulseRec 2s infinite;
+}
+
+.stopBtn {
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.stopBtn:hover {
+  background: var(--color-bg-elevated);
+}
+
+.playbackTimer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--color-text-secondary);
+  margin-left: 10px;
+}
+
+.timerDivider {
+  color: var(--color-text-tertiary);
+}
+
+.dawToolbar {
+  display: flex;
+  gap: 8px;
+}
+
+.splitClipBtn,
+.zoomTimelineBtn {
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.splitClipBtn:hover,
+.zoomTimelineBtn:hover {
+  background: var(--color-bg-elevated);
+}
+
+.splitClipBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- Multi-Track Timeline Canvas ---- */
+.tracksTimelineContainer {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.playheadTimeTicks {
+  height: 24px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-tertiary);
+  position: relative;
+}
+
+.timelineRuler {
+  position: absolute;
+  inset: 0;
+}
+
+.timelineRuler span {
+  position: absolute;
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--color-text-tertiary);
+  transform: translateX(-50%);
+  top: 5px;
+}
+
+.playheadLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-accent-light);
+  z-index: 50;
+  pointer-events: none;
+}
+
+.playheadLine::after {
+  content: '▼';
+  position: absolute;
+  top: -3px;
+  left: -4px;
+  font-size: 8px;
+  color: var(--color-accent-light);
+}
+
+.trackRow {
+  display: flex;
+  border-bottom: 1px solid var(--color-border-light);
+  min-height: 80px;
+}
+
+.trackRow:last-child {
+  border-bottom: none;
+}
+
+.trackControlHeader {
+  width: 180px;
+  background: var(--color-bg-tertiary);
+  border-right: 1px solid var(--color-border);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.trackTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trackActionButtons {
+  display: flex;
+  gap: 4px;
+  margin: 6px 0;
+}
+
+.trackActionBtn,
+.trackActionBtnMuted,
+.trackActionBtnSoloed,
+.trackActionBtnUpload,
+.trackActionBtnRecord {
+  width: 20px;
+  height: 20px;
+  font-size: 8px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.trackActionBtn:hover,
+.trackActionBtnUpload:hover {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+}
+
+.trackActionBtnMuted {
+  background: var(--color-error-alpha);
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.trackActionBtnSoloed {
+  background: var(--color-warning-alpha);
+  border-color: var(--color-warning);
+  color: var(--color-warning);
+}
+
+.trackActionBtnRecord:hover {
+  background: rgba(251, 146, 60, 0.2);
+  color: rgb(251, 146, 60);
+  border-color: rgb(251, 146, 60);
+}
+
+.recActiveBlink {
+  background: var(--color-error);
+  color: #fff;
+  border-color: var(--color-error);
+  animation: pulseRec 1.5s infinite;
+}
+
+@keyframes pulseRec {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.trackVolWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-tertiary);
+}
+
+.trackVolSlider {
+  flex: 1;
+  height: 2px;
+  accent-color: var(--color-accent);
+}
+
+.trackLane {
+  flex: 1;
+  position: relative;
+  background: rgba(10, 10, 15, 0.15);
+}
+
+.clipBlock {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  background: linear-gradient(135deg, rgba(124, 111, 247, 0.2), rgba(124, 111, 247, 0.05));
+  border: 1px solid rgba(124, 111, 247, 0.4);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+  overflow: hidden;
+}
+
+.clipBlockSelected {
+  background: linear-gradient(135deg, rgba(124, 111, 247, 0.35), rgba(124, 111, 247, 0.15));
+  border-color: var(--color-accent);
+  box-shadow: 0 0 8px rgba(124, 111, 247, 0.3);
+}
+
+.clipBlockLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clipBlockDuration {
+  font-size: 8px;
+  color: var(--color-text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.clipMoveHandles {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 17, 24, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.moveHandleBtn,
+.deleteClipBtn {
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-sm);
+  font-size: 8px;
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+.deleteClipBtn {
+  color: var(--color-error);
+}
+
+.deleteClipBtn:hover {
+  background: var(--color-error-alpha);
+}
+
+.recOverlayTrack {
+  position: absolute;
+  inset: 0;
+  background: rgba(239, 68, 68, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: rgb(251, 146, 60);
+  font-weight: 600;
+}
+
+.recBlinkCircle {
+  width: 8px;
+  height: 8px;
+  background: rgb(251, 146, 60);
+  border-radius: var(--radius-full);
+  animation: pulseRec 1.2s infinite;
+}
+
+/* ---- Bottom Multi-Panel Tabs ---- */
+.studioMultiTabsSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.multiTabPanel {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 280px;
+}
+
+.tabPanelTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 10px;
+  color: var(--color-text-primary);
+}
+
+/* AI Copilot UI */
+.aiInitView {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+.aiTextHelp {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+  max-width: 280px;
+}
+
+.runAIButton {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light));
+  border: none;
+  color: #fff;
+  border-radius: var(--radius-md);
+  padding: 8px 18px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+}
+
+.runAIButton:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow);
+}
+
+.aiResultsWorkspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.aiToolbarTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.aiTabBtn,
+.aiTabBtnActive {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.aiTabBtnActive {
+  background: var(--color-accent-alpha);
+  border-color: var(--color-accent);
+  color: var(--color-accent-light);
+}
+
+.fillerWordBtn {
+  background: rgba(251, 146, 60, 0.15);
+  border: 1px solid rgb(251, 146, 60);
+  color: rgb(251, 146, 60);
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: auto;
+  font-weight: bold;
+}
+
+.fillerWordBtn:hover {
+  background: rgb(251, 146, 60);
+  color: #fff;
+}
+
+.aiTabResultContent {
+  flex: 1;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.transcriptBox,
+.notesBox {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.summaryBox {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.chaptersList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chapterRow {
+  display: flex;
+  gap: 12px;
+  font-size: 0.76rem;
+  border-bottom: 1px dashed var(--color-border-light);
+  padding-bottom: 4px;
+}
+
+.chapterTime {
+  font-family: var(--mono);
+  color: var(--color-accent-light);
+  font-weight: 700;
+}
+
+.chapterTitle {
+  color: var(--color-text-secondary);
+}
+
+/* Metadata Form UI */
+.metadataFormGrid {
+  display: flex;
+  gap: 16px;
+}
+
+.artworkColumn {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.artworkBox {
+  width: 100px;
+  height: 100px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.artworkImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.artworkPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: var(--color-text-tertiary);
+  gap: 6px;
+}
+
+.artworkPlaceholder span {
+  font-size: 8px;
+  line-height: 1.1;
+}
+
+.artworkUploadBtn {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 0.72rem;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.fieldsColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formRow {
+  display: flex;
+  gap: 8px;
+}
+
+.formField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formField label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.formField input,
+.formField textarea {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  padding: 4px 8px;
+  font-size: 0.78rem;
+  outline: none;
+}
+
+.formField input:focus,
+.formField textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.formField textarea {
+  resize: none;
+  height: 60px;
+}
+
+/* Export Panel UI */
+.exportFormPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  height: 100%;
+}
+
+.exportFormRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.exportFormLabel {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.selectOverrideWrapper select {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.mixExportButton {
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+  border: none;
+  color: #fff;
+  border-radius: var(--radius-md);
+  padding: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-md);
+  margin-top: 10px;
+}
+
+.mixExportButton:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ---- Cloud File Picker Dialog ---- */
+.cloudModal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cloudModalOverlay {
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg-overlay);
+  backdrop-filter: blur(4px);
+}
+
+.cloudModalBox {
+  position: relative;
+  z-index: 1;
+  max-width: 440px;
+  width: 90%;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-xl);
+}
+
+.modalClose {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.cloudModalTitle {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.cloudTabButtons {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.cloudTabBtn,
+.cloudTabBtnActive {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cloudTabBtnActive {
+  background: var(--color-accent-alpha);
+  color: var(--color-accent-light);
+}
+
+.cloudFilesList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.cloudFileItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--color-bg-secondary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.78rem;
+  transition: all var(--transition-fast);
+}
+
+.cloudFileItem:hover {
+  border-color: var(--color-accent);
+  background: var(--color-bg-tertiary);
+}
+
+.cloudFolderIcon {
+  color: var(--color-warning);
+}
+
+.cloudAudioIcon {
+  color: var(--color-accent-light);
+}
+
+.cloudFileName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cloudFileSize {
+  font-size: 8px;
+  color: var(--color-text-tertiary);
+}
+
+/* ---- Microphone Recording HUD Overlay ---- */
+.recordingOverlayHUD {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recordingBox {
+  max-width: 360px;
+  width: 90%;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-xl);
+}
+
+.redPulseIcon {
+  width: 24px;
+  height: 24px;
+  background: var(--color-error);
+  border-radius: var(--radius-full);
+  animation: pulseRec 1.2s infinite;
+  box-shadow: 0 0 10px var(--color-error);
+}
+
+.recTitle {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.recTime {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  color: rgb(251, 146, 60);
+  font-weight: bold;
+}
+
+.canvasVisualizer {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  width: 100%;
+}
+
+.stopRecBtn {
+  background: var(--color-error);
+  border: none;
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---- Export Progress HUD Overlay ---- */
+.exportProgressOverlayHUD {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--color-bg-overlay);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exportProgressBox {
+  max-width: 400px;
+  width: 90%;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-xl);
+}
+
+.exportPercent {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.exportMsg {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-accent-light);
+}
+
+.exportSubtext {
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+  line-height: 1.45;
+}
+
+.glowProgressOuter {
+  width: 100%;
+  height: 6px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.glowProgressBar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light));
+  border-radius: var(--radius-full);
+  transition: width var(--transition-fast);
+  box-shadow: 0 0 8px var(--color-accent);
+}
+
+/* ---- Create Project Modal ---- */
+.newProjModal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.newProjOverlay {
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg-overlay);
+  backdrop-filter: blur(4px);
+}
+
+.newProjBox {
+  position: relative;
+  z-index: 1;
+  max-width: 360px;
+  width: 90%;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: var(--shadow-xl);
+}
+
+.newProjTitle {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.newProjField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.newProjField label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.newProjField input {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  outline: none;
+}
+
+.newProjField input:focus {
+  border-color: var(--color-accent);
+}
+
+.newProjActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.newProjSubmit {
+  background: var(--color-accent);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 6px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.newProjSubmit:hover {
+  background: var(--color-accent-light);
+}

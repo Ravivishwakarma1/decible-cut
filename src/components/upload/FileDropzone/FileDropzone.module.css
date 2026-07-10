@@ -1,0 +1,117 @@
+.dropzone {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 48px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-base),
+    background var(--transition-base),
+    box-shadow var(--transition-base);
+  background: var(--color-bg-secondary);
+  text-align: center;
+}
+
+.dropzone:hover {
+  border-color: var(--color-accent);
+  background: var(--color-bg-tertiary);
+  box-shadow: var(--shadow-glow);
+}
+
+.dragging {
+  border-color: var(--color-accent);
+  background: var(--color-accent-alpha);
+  box-shadow: var(--shadow-glow);
+}
+
+.compact {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  flex-direction: row;
+  gap: 8px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.compact .content {
+  flex-direction: row;
+  gap: 8px;
+}
+
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-elevated);
+  transition: background var(--transition-base), transform var(--transition-spring);
+}
+
+.compact .iconWrap {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+}
+
+.dropzone:hover .iconWrap {
+  background: var(--color-accent-alpha);
+  transform: scale(1.05);
+}
+
+.icon {
+  color: var(--color-text-tertiary);
+  transition: color var(--transition-base);
+}
+
+.iconActive {
+  color: var(--color-accent);
+  animation: bounce 0.4s ease;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+.dropzone:hover .icon { color: var(--color-accent); }
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--color-text-tertiary);
+}
+
+.link {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.formats {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.compactLabel {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}

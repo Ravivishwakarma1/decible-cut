@@ -1,0 +1,196 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg-overlay);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 150ms ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.panel {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  width: min(480px, 95vw);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  animation: scaleIn 200ms var(--transition-spring) both;
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  display: flex;
+  padding: 4px;
+  border-radius: var(--radius-xs);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.closeBtn:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hint {
+  font-size: 0.72rem !important;
+  color: var(--color-text-tertiary);
+}
+
+.formatBtns, .bitrateGroup {
+  display: flex;
+  gap: 6px;
+}
+
+.formatBtn, .bitrateBtn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.formatBtn:hover, .bitrateBtn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+.formatActive, .bitrateActive {
+  background: var(--color-accent-alpha);
+  border-color: var(--color-accent);
+  color: var(--color-accent-light);
+}
+
+.filenameRow {
+  display: flex;
+  gap: 0;
+}
+
+.filenameInput {
+  flex: 1;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-right: none;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.filenameInput:focus {
+  border-color: var(--color-accent);
+}
+
+.ext {
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 8px 12px;
+  color: var(--color-text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+}
+
+.infoBox {
+  background: var(--color-info-alpha);
+  border: 1px solid var(--color-info);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+
+.infoBox p {
+  font-size: 0.78rem;
+  color: var(--color-info);
+}
+
+.infoBox strong { font-weight: 700; }
+
+.progressWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progressBar {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+
+.progressMsg {
+  font-size: 0.75rem !important;
+  color: var(--color-text-tertiary);
+  text-align: center;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--color-border-light);
+}

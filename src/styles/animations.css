@@ -1,0 +1,111 @@
+/* ============================================================
+   DecibelCut — Animations & Keyframes
+   ============================================================ */
+
+/* ---- Fade In ---- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---- Fade In Up ---- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Fade In Down ---- */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Slide In Right ---- */
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ---- Slide In Left ---- */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ---- Scale In ---- */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ---- Pulse (glow) ---- */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+/* ---- Spin ---- */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ---- Shimmer (skeleton loading) ---- */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* ---- Waveform Bars ---- */
+@keyframes waveBounce {
+  0%, 100% { transform: scaleY(0.3); }
+  50%       { transform: scaleY(1); }
+}
+
+/* ---- Toast Slide In ---- */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(100%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(100%); }
+}
+
+/* ---- Playhead blink ---- */
+@keyframes playheadBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* ---- Utility Animation Classes ---- */
+.animate-fadeIn      { animation: fadeIn      var(--transition-base) ease both; }
+.animate-fadeInUp    { animation: fadeInUp    var(--transition-base) ease both; }
+.animate-fadeInDown  { animation: fadeInDown  var(--transition-base) ease both; }
+.animate-slideInRight { animation: slideInRight var(--transition-base) ease both; }
+.animate-slideInLeft { animation: slideInLeft var(--transition-base) ease both; }
+.animate-scaleIn     { animation: scaleIn     var(--transition-spring) both; }
+.animate-spin        { animation: spin 1s linear infinite; }
+.animate-pulse       { animation: pulse 2s ease infinite; }
+
+/* ---- Staggered children ---- */
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 320ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 400ms; }
+
+/* ---- Skeleton Loading ---- */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-tertiary) 25%,
+    var(--color-bg-elevated) 50%,
+    var(--color-bg-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}

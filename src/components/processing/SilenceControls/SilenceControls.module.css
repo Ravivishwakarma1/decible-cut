@@ -1,0 +1,56 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionTitle {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.presetBtn {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.presetBtn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+.presetActive {
+  background: var(--color-accent-alpha);
+  border-color: var(--color-accent);
+  color: var(--color-accent-light);
+}
+
+.presetDesc {
+  font-size: 0.72rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+}

@@ -1,0 +1,234 @@
+.root {
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+  overflow-y: auto;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+  width: fit-content;
+}
+
+.backBtn:hover { color: var(--color-accent-light); }
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.sectionTitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.themeGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.themeBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.themeBtn:hover { border-color: var(--color-accent); color: var(--color-text-primary); }
+
+.themeBtnActive {
+  background: var(--color-accent-alpha);
+  border-color: var(--color-accent);
+  color: var(--color-accent-light);
+}
+
+.select {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 8px 12px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+  appearance: auto;
+}
+
+.select:focus { border-color: var(--color-accent); }
+
+/* Toggle */
+.toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.toggleLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.toggleDesc {
+  font-size: 0.78rem !important;
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
+}
+
+.toggleBtn {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  border: none;
+  background: var(--color-border);
+  cursor: pointer;
+  position: relative;
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.toggleOn { background: var(--color-accent); }
+
+.toggleThumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform var(--transition-fast);
+}
+
+.toggleOn .toggleThumb { transform: translateX(18px); }
+
+/* Shortcuts */
+.shortcutCategory {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shortcutCatTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.shortcutList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.shortcut {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: var(--radius-xs);
+  background: var(--color-bg-tertiary);
+}
+
+.shortcutLabel {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+}
+
+.keys {
+  display: flex;
+  gap: 4px;
+}
+
+.key {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--color-text-secondary);
+}
+
+/* Danger */
+.dangerBtn {
+  background: var(--color-error-alpha);
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  align-self: flex-start;
+}
+
+.dangerBtn:hover {
+  background: var(--color-error);
+  color: #fff;
+}

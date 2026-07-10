@@ -1,0 +1,94 @@
+/* ============================================================
+   AdComponents CSS Module
+   ============================================================ */
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--color-border);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md);
+  position: relative;
+  padding: 16px;
+  text-align: center;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+:global([data-theme="light"]) .placeholder {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.placeholder:hover {
+  border-color: var(--color-accent-border);
+  background: rgba(124, 111, 247, 0.02);
+}
+
+.placeholderBadge {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.placeholderLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.consentNotice {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* Production Ad Container wrapper */
+.adWrapper {
+  position: relative;
+  padding-top: 18px; /* space for advertisement label */
+  box-sizing: border-box;
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.05em;
+}
+
+.skyscraperLeft,
+.skyscraperRight {
+  position: fixed;
+  top: 120px;
+  width: 160px;
+  height: 600px;
+  z-index: 90;
+}
+
+.skyscraperLeft {
+  left: 16px;
+}
+
+.skyscraperRight {
+  right: 16px;
+}
+
+/* Hide side skyscrapers on screens where they would overlap content */
+@media (max-width: 1480px) {
+  .skyscraperLeft,
+  .skyscraperRight {
+    display: none;
+  }
+}

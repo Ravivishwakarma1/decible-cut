@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.value {
+  font-size: 0.75rem;
+  color: var(--color-accent-light);
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 60px;
+  text-align: right;
+}
+
+.track {
+  position: relative;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.fill {
+  position: absolute;
+  left: 0;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  transition: width 0.05s;
+}
+
+.input {
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.input:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Thumb — WebKit */
+.input::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 2px solid var(--color-bg-primary);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 0 0 0 var(--color-accent-alpha);
+}
+
+.input::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 6px var(--color-accent-alpha);
+}
+
+/* Thumb — Firefox */
+.input::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 2px solid var(--color-bg-primary);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.input::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}

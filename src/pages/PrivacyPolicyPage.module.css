@@ -1,0 +1,250 @@
+.root {
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  overflow-y: auto;
+  font-family: 'Inter', sans-serif;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  align-self: flex-start;
+}
+
+.backBtn:hover {
+  color: var(--color-accent-light);
+  transform: translateX(-2px);
+}
+
+.iconWrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-alpha);
+  border: 1px solid var(--color-accent-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.shieldIcon {
+  color: var(--color-accent-light);
+}
+
+:global([data-theme="light"]) .shieldIcon {
+  color: var(--color-accent-dark);
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.subtitle {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+}
+
+/* Philosophy Callout */
+.philosophyCard {
+  background: linear-gradient(135deg, rgba(124, 111, 247, 0.04) 0%, rgba(96, 165, 250, 0.04) 100%);
+  border: 1px dashed var(--color-accent);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-accent-light);
+}
+
+:global([data-theme="light"]) .cardHeader {
+  color: var(--color-accent-dark);
+}
+
+.lockIcon {
+  flex-shrink: 0;
+}
+
+.philosophyCard h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.philosophyCard p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+/* Grid of Cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform var(--transition-base), border-color var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent-border);
+}
+
+.cardIconWrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--color-accent-alpha);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accentIcon {
+  color: var(--color-accent-light);
+}
+
+:global([data-theme="light"]) .accentIcon {
+  color: var(--color-accent-dark);
+}
+
+.cardTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.cardText {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+/* Technical Details Section */
+.detailedSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  border-left: 3px solid var(--color-accent);
+  padding-left: 12px;
+}
+
+.detailsList {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detailItem h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+
+.detailItem p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.detailItem code {
+  font-size: 0.8rem;
+  padding: 2px 4px;
+}
+
+.detailItem:not(:last-child) {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+/* Footer Section */
+.policyFooter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  border-top: 1px solid var(--color-border);
+  padding-top: 32px;
+  margin-top: 16px;
+}
+
+.policyFooter p {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  max-width: 600px;
+}
+
+.lastUpdated {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
