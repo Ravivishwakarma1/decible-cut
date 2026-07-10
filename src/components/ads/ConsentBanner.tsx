@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSettingsStore } from '../../store/settingsStore';
-import { ShieldAlert, Cookie, Check, X } from 'lucide-react';
+import { Cookie, Check, X } from 'lucide-react';
 import styles from './ConsentBanner.module.css';
 
 export const ConsentBanner: React.FC = () => {

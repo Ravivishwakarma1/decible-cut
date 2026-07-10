@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Zap, Sliders, Volume2, Layers, Mic, Headphones,
+  Zap, Sliders, Volume2, Layers, Mic,
   Sparkles, Music, ArrowLeft, Check, Mail, ArrowRight,
   Clock, Play, AlertCircle
 } from 'lucide-react';
