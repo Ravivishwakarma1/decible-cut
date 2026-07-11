@@ -25,7 +25,8 @@ export const App: React.FC = () => {
   useEffect(() => {
     const publisherId = 
       import.meta.env.VITE_GOOGLE_ADSENSE_ID || 
-      import.meta.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID;
+      import.meta.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID ||
+      'ca-pub-6264045340585631';
 
     // Load only in production mode when consent is decided (either granted or denied)
     const shouldLoadAdSense = 

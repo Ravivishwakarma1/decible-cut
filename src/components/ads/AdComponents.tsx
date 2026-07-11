@@ -8,7 +8,7 @@ const getPublisherId = (): string | null => {
   return (
     import.meta.env.VITE_GOOGLE_ADSENSE_ID || 
     import.meta.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID || 
-    null
+    'ca-pub-6264045340585631'
   );
 };
 
