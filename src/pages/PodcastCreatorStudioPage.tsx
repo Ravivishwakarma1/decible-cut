@@ -35,6 +35,8 @@ import type {
 import { decodeAudioFile } from '../services/audioEngine';
 import type { ExportProgress } from '../types/processing.types';
 import { useSEO } from '../hooks/useSEO';
+import { useSettingsStore } from '../store/settingsStore';
+import { generateRealGroqAIContent } from '../services/groqService';
 
 export const PodcastCreatorStudioPage: React.FC = () => {
   useSEO({
@@ -89,9 +91,12 @@ export const PodcastCreatorStudioPage: React.FC = () => {
   const isRecordingRef = useRef(false);
   const recAudioCtxRef = useRef<AudioContext | null>(null);
 
+  const groqApiKey = useSettingsStore((s) => s.groqApiKey);
+
   // AI features state
   const [aiResults, setAiResults] = useState<MockAIResults | null>(null);
   const [isAIProcessing, setIsAIProcessing] = useState(false);
+  const [aiProgressMsg, setAiProgressMsg] = useState('Analyzing project waves…');
   const [activeAITab, setActiveAITab] = useState<'transcript' | 'summary' | 'notes' | 'chapters'>('transcript');
   const [fillerWordsRemoved, setFillerWordsRemoved] = useState(false);
 
@@ -714,12 +719,49 @@ export const PodcastCreatorStudioPage: React.FC = () => {
   const runAICopilotMix = async () => {
     if (!activeProject) return;
 
-    setIsAIProcessing(true);
-    await new Promise(r => setTimeout(r, 2000)); // processing mock delay
+    if (!groqApiKey) {
+      const confirmMock = window.confirm(
+        "Groq API Key not found.\n\nWould you like to use the demo mock content? \nTo use real AI, enter your Groq API Key in the Settings page."
+      );
+      if (!confirmMock) return;
 
-    const content = generateMockAIContent(activeProject.name);
-    setAiResults(content);
-    setIsAIProcessing(false);
+      setIsAIProcessing(true);
+      setAiProgressMsg('Analyzing project waves (Mock)…');
+      await new Promise(r => setTimeout(r, 2000));
+
+      const content = generateMockAIContent(activeProject.name);
+      setAiResults(content);
+      setIsAIProcessing(false);
+      return;
+    }
+
+    setIsAIProcessing(true);
+    setAiProgressMsg('Mixing tracks (0%)…');
+
+    const audioCtx = new AudioContext();
+    try {
+      // 1. Render mixed buffer offline
+      const mixedBuffer = await renderMultiTrackPodcast(activeProject, audioCtx, (pct) => {
+        setAiProgressMsg(`Mixing tracks (${Math.round(pct * 100)}%)…`);
+      });
+
+      // 2. Call groq service
+      const results = await generateRealGroqAIContent(
+        mixedBuffer,
+        activeProject.name,
+        groqApiKey,
+        (msg) => setAiProgressMsg(msg)
+      );
+
+      setAiResults(results);
+      setFillerWordsRemoved(false); // Reset status
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : 'AI processing failed');
+    } finally {
+      setIsAIProcessing(false);
+      audioCtx.close().catch(() => null);
+    }
   };
 
   const handleRemoveFillerWords = () => {
@@ -1144,7 +1186,7 @@ export const PodcastCreatorStudioPage: React.FC = () => {
                         disabled={isAIProcessing}
                       >
                         <Wand2 size={14} />
-                        <span>{isAIProcessing ? 'Analyzing project waves…' : 'Transcribe & Generate Episode Notes'}</span>
+                        <span>{isAIProcessing ? aiProgressMsg : 'Transcribe & Generate Episode Notes'}</span>
                       </button>
                     </div>
                   ) : (

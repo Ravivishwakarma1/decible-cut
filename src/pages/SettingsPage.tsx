@@ -123,6 +123,24 @@ export const SettingsPage: React.FC = () => {
           ))}
         </section>
 
+        {/* AI Settings */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>AI settings</h2>
+          <div className={styles.field}>
+            <label className={styles.label}>Groq API Key</label>
+            <input
+              type="password"
+              className={styles.input}
+              placeholder="Enter your Groq API Key..."
+              value={settings.groqApiKey}
+              onChange={(e) => settings.setGroqApiKey(e.target.value)}
+            />
+            <p className={styles.helpText}>
+              Get your API key from the <a href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer" style={{ color: '#fb923c', textDecoration: 'underline' }}>Groq Console</a>. Your key is stored 100% locally in your browser.
+            </p>
+          </div>
+        </section>
+
         {/* Danger Zone */}
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Reset</h2>

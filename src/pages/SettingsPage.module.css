@@ -232,3 +232,25 @@
   background: var(--color-error);
   color: #fff;
 }
+
+.input {
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.input:focus {
+  border-color: var(--color-accent);
+}
+
+.helpText {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+

@@ -18,6 +18,7 @@ interface SettingsState {
   waveformBarWidth: number;
   waveformBarGap: number;
   adConsent: 'granted' | 'denied' | 'undecided';
+  groqApiKey: string;
 
   setTheme: (theme: Theme) => void;
   setDefaultPreset: (preset: PresetId) => void;
@@ -28,6 +29,7 @@ interface SettingsState {
   setWaveformBarWidth: (value: number) => void;
   setWaveformBarGap: (value: number) => void;
   setAdConsent: (consent: 'granted' | 'denied') => void;
+  setGroqApiKey: (key: string) => void;
   resetToDefaults: () => void;
 }
 
@@ -41,6 +43,7 @@ const defaults = {
   waveformBarWidth: 2,
   waveformBarGap: 1,
   adConsent: 'undecided' as 'granted' | 'denied' | 'undecided',
+  groqApiKey: '',
 };
 
 export const useSettingsStore = create<SettingsState>()(
@@ -57,6 +60,7 @@ export const useSettingsStore = create<SettingsState>()(
       setWaveformBarWidth: (value) => set((state) => { state.waveformBarWidth = value; }),
       setWaveformBarGap: (value) => set((state) => { state.waveformBarGap = value; }),
       setAdConsent: (consent) => set((state) => { state.adConsent = consent; }),
+      setGroqApiKey: (key) => set((state) => { state.groqApiKey = key; }),
       resetToDefaults: () => set(() => ({ ...defaults })),
     })),
     {
