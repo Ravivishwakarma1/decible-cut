@@ -36,8 +36,14 @@ import type {
 } from '../services/podcastStudioService';
 import { decodeAudioFile } from '../services/audioEngine';
 import type { ExportProgress } from '../types/processing.types';
+import { useSEO } from '../hooks/useSEO';
 
 export const PodcastCreatorStudioPage: React.FC = () => {
+  useSEO({
+    title: 'Podcast Creator Studio — DecibelCut',
+    description: 'Record, trim, and arrange your podcasts inside your browser. Multi-track audio timeline, AI summaries, and professional mastering.'
+  });
+
   const navigate = useNavigate();
 
   // Projects list state

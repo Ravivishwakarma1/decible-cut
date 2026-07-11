@@ -30,8 +30,14 @@ import type {
 import { decodeAudioFile } from '../services/audioEngine';
 import { formatDuration, formatFileSize } from '../utils/formatters';
 import type { ExportProgress } from '../types/processing.types';
+import { useSEO } from '../hooks/useSEO';
 
 export const CreatorToolsPage: React.FC = () => {
+  useSEO({
+    title: 'Advanced Audio Creator Tools — DecibelCut',
+    description: 'Optimize your audio for YouTube, Spotify, and TikTok. Add voice compression, loudness normalization, noise gates, and batch export.'
+  });
+
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   

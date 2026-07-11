@@ -4,6 +4,7 @@ import { AppRouter } from './router';
 import { useSettingsStore } from './store/settingsStore';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { ConsentBanner } from './components/ads/ConsentBanner';
+import { isGoogleBot } from './utils/isBot';
 import './styles/globals.css';
 
 export const App: React.FC = () => {
@@ -21,18 +22,25 @@ export const App: React.FC = () => {
     }
   }, [theme]);
 
-  // Dynamically load Google AdSense script depending on consent
+  // Dynamically load Google AdSense script depending on consent and route
   useEffect(() => {
     const publisherId = 
       import.meta.env.VITE_GOOGLE_ADSENSE_ID || 
       import.meta.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID ||
       'ca-pub-6264045340585631';
 
-    // Load only in production mode when consent is decided (either granted or denied)
+    const isBot = isGoogleBot();
+    
+    // Define content pages where ads are allowed to be served
+    const contentPages = ['/', '/about', '/privacy', '/creator-tools', '/podcast-studio'];
+    const isContentPage = contentPages.includes(window.location.pathname);
+
+    // Load only in production mode when consent is decided (or visitor is a crawler) and on content pages
     const shouldLoadAdSense = 
       !import.meta.env.DEV && 
       publisherId && 
-      adConsent !== 'undecided';
+      (adConsent !== 'undecided' || isBot) &&
+      isContentPage;
 
     if (shouldLoadAdSense) {
       const existingScript = document.querySelector('script[src*="pagead2.googlesyndication.com"]');

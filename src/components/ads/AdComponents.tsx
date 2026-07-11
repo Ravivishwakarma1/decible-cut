@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSettingsStore } from '../../store/settingsStore';
 import { adsConfig } from '../../config/adsConfig';
+import { isGoogleBot } from '../../utils/isBot';
 import styles from './AdComponents.module.css';
 
 // Read env variables
@@ -35,9 +36,10 @@ const AdContainer: React.FC<AdProps & { adType: string; placeholderHeight: numbe
   const adConsent = useSettingsStore((s) => s.adConsent);
   const enabled = adsConfig.enabled && adsConfig.placements[placement];
   const publisherId = getPublisherId();
+  const isBot = isGoogleBot();
 
   useEffect(() => {
-    if (!isDevMode() && enabled && adConsent !== 'undecided') {
+    if (!isDevMode() && enabled && (adConsent !== 'undecided' || isBot)) {
       try {
         const adsbygoogle = (window as any).adsbygoogle || [];
         adsbygoogle.push({});
@@ -45,12 +47,12 @@ const AdContainer: React.FC<AdProps & { adType: string; placeholderHeight: numbe
         console.error('AdSense initialization error:', e);
       }
     }
-  }, [enabled, adConsent]);
+  }, [enabled, adConsent, isBot]);
 
   if (!enabled) return null;
 
   // Render placeholder in Dev Mode or if consent is undecided (loading/waiting)
-  if (isDevMode() || adConsent === 'undecided') {
+  if (isDevMode() || (adConsent === 'undecided' && !isBot)) {
     return (
       <div 
         className={styles.placeholder} 

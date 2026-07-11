@@ -1,13 +1,14 @@
 import React from 'react';
 import { useSettingsStore } from '../../store/settingsStore';
 import { Cookie, Check, X } from 'lucide-react';
+import { isGoogleBot } from '../../utils/isBot';
 import styles from './ConsentBanner.module.css';
 
 export const ConsentBanner: React.FC = () => {
   const adConsent = useSettingsStore((s) => s.adConsent);
   const setAdConsent = useSettingsStore((s) => s.setAdConsent);
 
-  if (adConsent !== 'undecided') return null;
+  if (isGoogleBot() || adConsent !== 'undecided') return null;
 
   return (
     <div className={styles.banner} role="alert" aria-live="polite">
