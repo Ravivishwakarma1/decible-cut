@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom';
 import styles from './AboutPage.module.css';
 import { ArrowLeft, Shield, Zap, Cpu, Lock, Heart } from 'lucide-react';
 import { InContentAd } from '../components/ads/AdComponents';
+import { useSEO } from '../hooks/useSEO';
 
 export const AboutPage: React.FC = () => {
+  useSEO({
+    title: 'About DecibelCut',
+    description: 'Learn how our privacy-first, client-side WebAssembly audio editor works.'
+  });
   return (
     <div className={styles.root}>
       <div className={styles.container}>

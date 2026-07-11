@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import WaveSurfer from 'wavesurfer.js';
 import JSZip from 'jszip';
+import { useSEO } from '../hooks/useSEO';
 
 interface QueueItem {
   id: string;
@@ -31,6 +32,11 @@ interface QueueItem {
 }
 
 export const VideoAudioPage: React.FC = () => {
+  useSEO({
+    title: 'Extract Audio from Video | DecibelCut',
+    description: 'Convert and extract high-quality audio files from MP4, WebM, and other video formats directly in your browser.'
+  });
+
   const navigate = useNavigate();
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [activeQueueId, setActiveQueueId] = useState<string | null>(null);

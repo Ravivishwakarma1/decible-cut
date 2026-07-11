@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Shield, Lock, EyeOff, ServerOff, Database, Globe } from 'lucide-react';
 import { InContentAd } from '../components/ads/AdComponents';
 import styles from './PrivacyPolicyPage.module.css';
+import { useSEO } from '../hooks/useSEO';
 
 export const PrivacyPolicyPage: React.FC = () => {
+  useSEO({
+    title: 'Privacy Policy | DecibelCut',
+    description: 'Read about our strict local-only, serverless data privacy commitment.'
+  });
   return (
     <div className={styles.root}>
       <div className={styles.container}>

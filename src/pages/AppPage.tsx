@@ -12,8 +12,14 @@ import { useAudioStore } from '../store/audioStore';
 import { useUIStore } from '../store/uiStore';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { useSession } from '../hooks/useSession';
+import { useSEO } from '../hooks/useSEO';
 
 export const AppPage: React.FC = () => {
+  useSEO({
+    title: 'Audio Silence Remover App | DecibelCut',
+    description: 'Intelligently scan audio files and remove silent gaps and dead air automatically. All processing runs locally in your browser.'
+  });
+
   const fileInfo = useAudioStore((s) => s.fileInfo);
   const deleteRegion = useAudioStore((s) => s.deleteRegion);
   const selectedRegionId = useAudioStore((s) => s.selectedRegionId);

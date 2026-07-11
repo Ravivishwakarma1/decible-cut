@@ -7,6 +7,7 @@ import {
   Scissors, Headphones, Video, Play, Pause
 } from 'lucide-react';
 import { BannerAd, InContentAd, FooterAd, SkyscraperAd } from '../components/ads/AdComponents';
+import { useSEO } from '../hooks/useSEO';
 
 // ---- Hero Section ----
 const Hero: React.FC = () => {
@@ -703,6 +704,11 @@ const Nav: React.FC = () => (
 
 // ---- Main Page ----
 export const LandingPage: React.FC = () => {
+  useSEO({
+    title: 'DecibelCut — Free Audio Silence Remover',
+    description: 'DecibelCut is a free, privacy-first audio editor that automatically removes silent gaps and dead air from your recordings. Runs entirely in your browser — your files never leave your device.'
+  });
+
   return (
     <div className={styles.page}>
       <Nav />
