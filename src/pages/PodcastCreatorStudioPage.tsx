@@ -8,13 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Mic, Upload, Folder, Play, Pause, Square, 
   Volume2, Trash2, Edit2, Copy, Plus, 
-  Wand2, Sparkles, FileText, Download, Cloud, Image, Music, 
+  Wand2, Sparkles, Download, Image, Music, 
   Settings, ChevronDown, Archive, PlayCircle
 } from 'lucide-react';
 import styles from './PodcastCreatorStudioPage.module.css';
 
 import {
-  MOCK_CLOUD_FILES,
   generateMockAIContent,
   getAllProjects,
   saveProject,
@@ -31,7 +30,6 @@ import type {
   PodcastProject,
   PodcastClip,
   LibraryAsset,
-  CloudFile,
   MockAIResults
 } from '../services/podcastStudioService';
 import { decodeAudioFile } from '../services/audioEngine';
@@ -67,9 +65,7 @@ export const PodcastCreatorStudioPage: React.FC = () => {
   const [libraryAssets, setLibraryAssets] = useState<LibraryAsset[]>([]);
   const [uploadingAssetType, setUploadingAssetType] = useState<LibraryAsset['type']>('music');
 
-  // Cloud picking modal
-  const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
-  const [cloudProvider, setCloudProvider] = useState<'gdrive' | 'dropbox' | 'onedrive'>('gdrive');
+
 
   // Recording module state
   const [isRecording, setIsRecording] = useState(false);
@@ -548,59 +544,7 @@ export const PodcastCreatorStudioPage: React.FC = () => {
     }
   };
 
-  // ---- Cloud Mocking Import ----
 
-  const handleCloudImport = async (file: CloudFile) => {
-    if (!activeProject || file.type === 'folder' || file.type === 'image') return;
-    
-    // Mock downloading file
-    setIsCloudModalOpen(false);
-    setExportProgress({ status: 'preparing', percent: 20, message: `Downloading ${file.name} from cloud storage…` });
-    setIsExporting(true);
-
-    try {
-      await new Promise(r => setTimeout(r, 1500));
-      
-      // Mock generate standard audio buffer for import
-      const audioCtx = new AudioContext();
-      try {
-        const mockBuffer = audioCtx.createBuffer(2, 44100 * 5, 44100); // 5s silent buffer
-        const fileId = `cloud_file_${Date.now()}`;
-        
-        // Save mock audio clip file as WAV Blob
-        const { audioBufferToWav } = await import('../services/audioEngine');
-        const wav = audioBufferToWav(mockBuffer);
-        const blob = new Blob([wav], { type: 'audio/wav' });
-        await saveAudioFile(fileId, blob);
-
-        const newClip: PodcastClip = {
-          id: `clip_${Date.now()}`,
-          name: file.name,
-          duration: 5.0,
-          startOffset: playheadTime,
-          audioFileId: fileId
-        };
-
-        // Add to SFX or Music track depending on folder
-        const targetTrack = activeProject.tracks.find(t => t.type === 'sfx') || activeProject.tracks[0];
-        const updatedTracks = activeProject.tracks.map(t => {
-          if (t.id === targetTrack.id) {
-            return { ...t, clips: [...t.clips, newClip] };
-          }
-          return t;
-        });
-
-        saveActiveProjectState({ ...activeProject, tracks: updatedTracks });
-      } finally {
-        audioCtx.close().catch(() => null);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsExporting(false);
-      setExportProgress(null);
-    }
-  };
 
   // ---- Audio Recording Module ----
 
@@ -1017,13 +961,7 @@ export const PodcastCreatorStudioPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Cloud picker */}
-          <div className={styles.sidebarBlock}>
-            <button className={styles.cloudPickerTrigger} onClick={() => setIsCloudModalOpen(true)}>
-              <Cloud size={14} />
-              <span>Import from Cloud Drive</span>
-            </button>
-          </div>
+
         </aside>
 
         {/* Center Editing Area */}
@@ -1423,36 +1361,7 @@ export const PodcastCreatorStudioPage: React.FC = () => {
         </main>
       </div>
 
-      {/* Cloud Drive Mock picker dialog */}
-      {isCloudModalOpen && (
-        <div className={styles.cloudModal}>
-          <div className={styles.cloudModalOverlay} onClick={() => setIsCloudModalOpen(false)} />
-          <div className={styles.cloudModalBox}>
-            <button className={styles.modalClose} onClick={() => setIsCloudModalOpen(false)}>×</button>
-            <h2 className={styles.cloudModalTitle}>Import Audio from Cloud Storage</h2>
-            
-            <div className={styles.cloudTabButtons}>
-              <button className={cloudProvider === 'gdrive' ? styles.cloudTabBtnActive : styles.cloudTabBtn} onClick={() => setCloudProvider('gdrive')}>Google Drive</button>
-              <button className={cloudProvider === 'dropbox' ? styles.cloudTabBtnActive : styles.cloudTabBtn} onClick={() => setCloudProvider('dropbox')}>Dropbox</button>
-              <button className={cloudProvider === 'onedrive' ? styles.cloudTabBtnActive : styles.cloudTabBtn} onClick={() => setCloudProvider('onedrive')}>OneDrive</button>
-            </div>
 
-            <div className={styles.cloudFilesList}>
-              {MOCK_CLOUD_FILES[cloudProvider].map(file => (
-                <div 
-                  key={file.id} 
-                  className={styles.cloudFileItem}
-                  onClick={() => handleCloudImport(file)}
-                >
-                  {file.type === 'folder' ? <Folder size={16} className={styles.cloudFolderIcon} /> : <FileText size={16} className={styles.cloudAudioIcon} />}
-                  <span className={styles.cloudFileName}>{file.name}</span>
-                  {file.type !== 'folder' && <span className={styles.cloudFileSize}>{(file.size / (1024 * 1024)).toFixed(1)}MB</span>}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Mic recording visualizer overlay */}
       {isRecording && recTrackId && (
