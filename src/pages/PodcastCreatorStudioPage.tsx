@@ -106,6 +106,7 @@ export const PodcastCreatorStudioPage: React.FC = () => {
   const [exportFormat, setExportFormat] = useState<'mp3' | 'wav' | 'flac' | 'm4a'>('mp3');
   const [exportProgress, setExportProgress] = useState<ExportProgress | null>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [enableDucking, setEnableDucking] = useState(false);
 
   // Load projects and assets on mount
   useEffect(() => {
@@ -467,6 +468,30 @@ export const PodcastCreatorStudioPage: React.FC = () => {
     const isAnySoloed = tracksToMix.some(t => t.soloed);
     const activeTracks = isAnySoloed ? tracksToMix.filter(t => t.soloed) : tracksToMix;
 
+    // Calculate voice track segments for ducking
+    const voiceIntervals: Array<{ start: number; end: number }> = [];
+    const voiceTracks = activeTracks.filter(t => t.type === 'voice');
+    voiceTracks.forEach(t => {
+      t.clips.forEach(clip => {
+        voiceIntervals.push({ start: clip.startOffset, end: clip.startOffset + clip.duration });
+      });
+    });
+
+    voiceIntervals.sort((a, b) => a.start - b.start);
+    const mergedVoice: Array<{ start: number; end: number }> = [];
+    for (const interval of voiceIntervals) {
+      if (mergedVoice.length === 0) {
+        mergedVoice.push({ ...interval });
+      } else {
+        const last = mergedVoice[mergedVoice.length - 1];
+        if (interval.start <= last.end) {
+          last.end = Math.max(last.end, interval.end);
+        } else {
+          mergedVoice.push({ ...interval });
+        }
+      }
+    }
+
     // Load and schedule sources
     const startTime = ctx.currentTime;
     const currentOffset = playheadTime;
@@ -491,9 +516,6 @@ export const PodcastCreatorStudioPage: React.FC = () => {
           const gainNode = ctx.createGain();
           gainNode.gain.setValueAtTime(track.volume, 0);
 
-          sourceNode.connect(gainNode);
-          gainNode.connect(ctx.destination);
-
           // Calculate start offset & delay
           let startDelay = clip.startOffset - currentOffset;
           let offsetInSource = 0;
@@ -502,6 +524,44 @@ export const PodcastCreatorStudioPage: React.FC = () => {
             offsetInSource = Math.abs(startDelay);
             startDelay = 0;
           }
+
+          // Apply auto-ducking on music tracks
+          if (enableDucking && track.type === 'music' && mergedVoice.length > 0) {
+            const duckVolume = track.volume * 0.2;
+            const attack = 0.2; // 200ms
+            const release = 0.8; // 800ms
+            
+            mergedVoice.forEach(seg => {
+              const clipStart = clip.startOffset;
+              const clipEnd = clip.startOffset + clip.duration;
+              
+              if (seg.start < clipEnd && seg.end > clipStart) {
+                const fadeOutStart = Math.max(clipStart, seg.start) - currentOffset;
+                const fadeOutEnd = Math.min(clipEnd, seg.start + attack) - currentOffset;
+                const fadeInStart = Math.max(clipStart, seg.end) - currentOffset;
+                const fadeInEnd = Math.min(clipEnd, seg.end + release) - currentOffset;
+                
+                if (fadeOutStart < clip.duration - offsetInSource) {
+                  const actualFadeOutStart = Math.max(0, fadeOutStart);
+                  const actualFadeOutEnd = Math.max(0, fadeOutEnd);
+                  gainNode.gain.setValueAtTime(track.volume, startTime + actualFadeOutStart);
+                  gainNode.gain.linearRampToValueAtTime(duckVolume, startTime + actualFadeOutEnd);
+                }
+                
+                if (fadeOutEnd < fadeInStart && fadeInStart < clip.duration - offsetInSource) {
+                  gainNode.gain.setValueAtTime(duckVolume, startTime + Math.max(0, fadeInStart));
+                }
+                
+                if (fadeInStart < clip.duration - offsetInSource) {
+                  const actualFadeInEnd = Math.max(0, fadeInEnd);
+                  gainNode.gain.linearRampToValueAtTime(track.volume, startTime + actualFadeInEnd);
+                }
+              }
+            });
+          }
+
+          sourceNode.connect(gainNode);
+          gainNode.connect(ctx.destination);
 
           sourceNode.start(startTime + startDelay, offsetInSource);
           activeSourcesRef.current.push(sourceNode);
@@ -743,7 +803,7 @@ export const PodcastCreatorStudioPage: React.FC = () => {
       // 1. Render mixed buffer offline
       const mixedBuffer = await renderMultiTrackPodcast(activeProject, audioCtx, (pct) => {
         setAiProgressMsg(`Mixing tracks (${Math.round(pct * 100)}%)…`);
-      });
+      }, enableDucking);
 
       // 2. Call groq service
       const results = await generateRealGroqAIContent(
@@ -807,7 +867,7 @@ export const PodcastCreatorStudioPage: React.FC = () => {
           percent: 10 + Math.round(pct * 0.4),
           message: 'Combining timeline tracks…'
         });
-      });
+      }, enableDucking);
 
       // 2. Normalize and encode with FFmpeg WASM
       const resultBlob = await normalizeLoudnessAndEncode(
@@ -1385,6 +1445,19 @@ export const PodcastCreatorStudioPage: React.FC = () => {
                           <option value="m4a">M4A (AAC container)</option>
                         </select>
                       </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 0 20px 0' }}>
+                      <input 
+                        type="checkbox" 
+                        id="enable-ducking-cb"
+                        checked={enableDucking} 
+                        onChange={(e) => setEnableDucking(e.target.checked)}
+                        style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+                      />
+                      <label htmlFor="enable-ducking-cb" style={{ fontSize: '0.85rem', color: '#cbd5e1', cursor: 'pointer', userSelect: 'none' }}>
+                        Enable Auto-Ducking (Fade music during speech)
+                      </label>
                     </div>
 
                     <button 

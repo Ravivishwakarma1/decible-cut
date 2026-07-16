@@ -669,6 +669,7 @@ const Footer: React.FC = () => (
           <Link to="/creator-tools" className={styles.footerLink}>Creator Tools</Link>
           <Link to="/podcast-studio" className={styles.footerLink}>Podcast Studio</Link>
           <Link to="/about" className={styles.footerLink}>About</Link>
+          <Link to="/support" className={styles.footerLink}>Support</Link>
           <Link to="/privacy" className={styles.footerLink}>Privacy Policy</Link>
         </div>
       </div>
@@ -694,6 +695,7 @@ const Nav: React.FC = () => (
         <Link to="/creator-tools" className={styles.navLink}>Creator Tools</Link>
         <Link to="/podcast-studio" className={styles.navLink}>Podcast Studio</Link>
         <Link to="/about" className={styles.navLink}>About</Link>
+        <Link to="/support" className={styles.navLink}>Support</Link>
       </div>
       <Link to="/app" className={styles.navCta}>
         Open App

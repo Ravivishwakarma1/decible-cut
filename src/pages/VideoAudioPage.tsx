@@ -17,6 +17,8 @@ import {
 import WaveSurfer from 'wavesurfer.js';
 import JSZip from 'jszip';
 import { useSEO } from '../hooks/useSEO';
+import { cutVideoSilences } from '../services/videoCutterService';
+import { Slider } from '../components/ui/Slider';
 
 interface QueueItem {
   id: string;
@@ -99,6 +101,15 @@ export const VideoAudioPage: React.FC = () => {
       start: 0,
       end: 0
     }
+  });
+
+  const [exportMode, setExportMode] = useState<'audio' | 'video'>('audio');
+  const [silenceConfig, setSilenceConfig] = useState({
+    threshold: -40,
+    minSilenceDuration: 1.5,
+    paddingBefore: 0.1,
+    paddingAfter: 0.1,
+    crossfadeDuration: 0.03
   });
 
   // Video player controls state
@@ -377,46 +388,65 @@ export const VideoAudioPage: React.FC = () => {
       const isLargeFile = item.file.size > 50 * 1024 * 1024; // 50MB
 
       try {
-        const audioBlob = await extractAudioFromVideo(
-          item.file,
-          updatedConfig,
-          (prog) => {
-            // Re-map progress strings based on local vs server fallback simulator
-            let displayMsg = prog.message;
-            let percent = prog.percent;
-
-            if (isLargeFile) {
-              if (percent <= 25) {
-                displayMsg = 'Uploading video file to secure processing server…';
-              } else if (percent <= 50) {
-                displayMsg = 'Analyzing track and extracting audio (Server)…';
-              } else if (percent <= 75) {
-                displayMsg = 'Transcoding to high-quality audio (Server)…';
-              } else if (percent <= 95) {
-                displayMsg = 'Downloading audio output stream…';
-              } else {
-                displayMsg = 'Finished cloud extraction successfully!';
+        const resultBlob = exportMode === 'video'
+          ? await cutVideoSilences(
+              item.file,
+              {
+                silenceConfig,
+                trim: {
+                  enabled: config.trim.enabled,
+                  start: trimStart,
+                  end: trimEnd,
+                },
+              },
+              (prog) => {
+                setProgressMessage(`[${i + 1}/${queue.length}] ${prog.message}`);
+                setQueue(prev => prev.map((q, idx) => idx === i ? { ...q, progress: prog.percent } : q));
+                const baseProgress = (i / queue.length) * 100;
+                const itemContribution = (prog.percent / queue.length);
+                setOverallProgress(Math.round(baseProgress + itemContribution));
               }
-            }
+            )
+          : await extractAudioFromVideo(
+              item.file,
+              updatedConfig,
+              (prog) => {
+                // Re-map progress strings based on local vs server fallback simulator
+                let displayMsg = prog.message;
+                let percent = prog.percent;
 
-            setProgressMessage(`[${i + 1}/${queue.length}] ${displayMsg}`);
-            
-            // Item progress updates
-            setQueue(prev => prev.map((q, idx) => idx === i ? { ...q, progress: percent } : q));
-            
-            // Overall progress calculator
-            const baseProgress = (i / queue.length) * 100;
-            const itemContribution = (percent / queue.length);
-            setOverallProgress(Math.round(baseProgress + itemContribution));
-          }
-        );
+                if (isLargeFile) {
+                  if (percent <= 25) {
+                    displayMsg = 'Uploading video file to secure processing server…';
+                  } else if (percent <= 50) {
+                    displayMsg = 'Analyzing track and extracting audio (Server)…';
+                  } else if (percent <= 75) {
+                    displayMsg = 'Transcoding to high-quality audio (Server)…';
+                  } else if (percent <= 95) {
+                    displayMsg = 'Downloading audio output stream…';
+                  } else {
+                    displayMsg = 'Finished cloud extraction successfully!';
+                  }
+                }
 
-        const resultUrl = URL.createObjectURL(audioBlob);
+                setProgressMessage(`[${i + 1}/${queue.length}] ${displayMsg}`);
+                
+                // Item progress updates
+                setQueue(prev => prev.map((q, idx) => idx === i ? { ...q, progress: percent } : q));
+                
+                // Overall progress calculator
+                const baseProgress = (i / queue.length) * 100;
+                const itemContribution = (percent / queue.length);
+                setOverallProgress(Math.round(baseProgress + itemContribution));
+              }
+            );
+
+        const resultUrl = URL.createObjectURL(resultBlob);
         updatedQueue[i] = { 
           ...item, 
           status: 'completed', 
           progress: 100, 
-          resultBlob: audioBlob, 
+          resultBlob, 
           resultUrl 
         };
         setQueue(prev => prev.map((q, idx) => idx === i ? updatedQueue[i] : q));
@@ -427,7 +457,7 @@ export const VideoAudioPage: React.FC = () => {
           ...item, 
           status: 'failed', 
           progress: 0, 
-          error: err instanceof Error ? err.message : 'Extraction failed' 
+          error: err instanceof Error ? err.message : 'Processing failed' 
         };
         setQueue(prev => prev.map((q, idx) => idx === i ? updatedQueue[i] : q));
       }
@@ -442,7 +472,9 @@ export const VideoAudioPage: React.FC = () => {
         completedItems.forEach((item) => {
           const blob = item.resultBlob;
           if (blob) {
-            const outName = `${item.name.replace(/\.[^/.]+$/, '')}.${config.format}`;
+            const ext = exportMode === 'video' ? (item.file.name.split('.').pop() || 'mp4') : config.format;
+            const suffix = exportMode === 'video' ? '_cut' : '';
+            const outName = `${item.name.replace(/\.[^/.]+$/, '')}${suffix}.${ext}`;
             zip.file(outName, blob);
           }
         });
@@ -455,12 +487,14 @@ export const VideoAudioPage: React.FC = () => {
 
     setIsProcessing(false);
     setOverallProgress(100);
-    setProgressMessage('Extraction task finished!');
+    setProgressMessage('Processing task finished!');
   };
 
   const handleDownloadSingle = (item: QueueItem) => {
     if (!item.resultUrl) return;
-    const name = `${item.name.replace(/\.[^/.]+$/, '')}.${config.format}`;
+    const ext = exportMode === 'video' ? (item.file.name.split('.').pop() || 'mp4') : config.format;
+    const suffix = exportMode === 'video' ? '_cut' : '';
+    const name = `${item.name.replace(/\.[^/.]+$/, '')}${suffix}.${ext}`;
     const a = document.createElement('a');
     a.href = item.resultUrl;
     a.download = name;
@@ -718,135 +752,230 @@ export const VideoAudioPage: React.FC = () => {
 
             {/* Right Column: Settings & Actions */}
             <div className={styles.settingsContainer}>
-              <div className={styles.settingsHeader}>Extraction Parameters</div>
-
-              <div className={styles.formGrid}>
-                <div className={styles.formGroup}>
-                  <label htmlFor="format-select">Format</label>
-                  <select 
-                    id="format-select" 
-                    className={styles.select}
-                    value={config.format}
-                    onChange={(e) => setConfig(prev => ({ ...prev, format: e.target.value as VideoExtractionConfig['format'] }))}
-                  >
-                    <option value="mp3">MP3 (.mp3)</option>
-                    <option value="wav">WAV (.wav)</option>
-                    <option value="flac">FLAC (.flac)</option>
-                    <option value="aac">AAC (.aac)</option>
-                    <option value="ogg">OGG (.ogg)</option>
-                    <option value="m4a">M4A (.m4a)</option>
-                  </select>
-                </div>
-
-                <div className={styles.formGroup} style={{ opacity: config.format === 'wav' || config.format === 'flac' ? 0.5 : 1 }}>
-                  <label htmlFor="bitrate-select">Bitrate</label>
-                  <select 
-                    id="bitrate-select" 
-                    className={styles.select}
-                    disabled={config.format === 'wav' || config.format === 'flac'}
-                    value={config.bitrate}
-                    onChange={(e) => setConfig(prev => ({ ...prev, bitrate: parseInt(e.target.value) }))}
-                  >
-                    <option value={96}>96 kbps (Fast/Low)</option>
-                    <option value={128}>128 kbps (Standard)</option>
-                    <option value={192}>192 kbps (Medium-High)</option>
-                    <option value={256}>256 kbps (High)</option>
-                    <option value={320}>320 kbps (Extreme/HD)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className={styles.formGrid}>
-                <div className={styles.formGroup}>
-                  <label htmlFor="samplerate-select">Sample Rate</label>
-                  <select 
-                    id="samplerate-select" 
-                    className={styles.select}
-                    value={config.sampleRate}
-                    onChange={(e) => setConfig(prev => ({ ...prev, sampleRate: parseInt(e.target.value) }))}
-                  >
-                    <option value={22050}>22,050 Hz</option>
-                    <option value={32000}>32,000 Hz</option>
-                    <option value={44100}>44,100 Hz (CD)</option>
-                    <option value={48000}>48,000 Hz (Studio)</option>
-                  </select>
-                </div>
-
-                <div className={styles.formGroup}>
-                  <label htmlFor="channels-select">Channels</label>
-                  <select 
-                    id="channels-select" 
-                    className={styles.select}
-                    value={config.channels}
-                    onChange={(e) => setConfig(prev => ({ ...prev, channels: parseInt(e.target.value) }))}
-                  >
-                    <option value={1}>Mono</option>
-                    <option value={2}>Stereo</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="preset-select">Quality Preset</label>
-                <select 
-                  id="preset-select" 
-                  className={styles.select}
-                  value={config.qualityPreset}
-                  onChange={(e) => setConfig(prev => ({ ...prev, qualityPreset: e.target.value as VideoExtractionConfig['qualityPreset'] }))}
+              <div className={styles.settingsHeader}>Processing Mode</div>
+              
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
+                <button
+                  type="button"
+                  style={{
+                    flex: 1,
+                    padding: '10px',
+                    borderRadius: '6px',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    backgroundColor: exportMode === 'audio' ? 'var(--color-accent)' : 'rgba(255,255,255,0.05)',
+                    color: '#fff',
+                    border: 'none',
+                    transition: 'all 0.2s'
+                  }}
+                  onClick={() => setExportMode('audio')}
                 >
-                  <option value="fast">Ultrafast Encoding</option>
-                  <option value="balanced">Balanced Quality/Speed</option>
-                  <option value="best">Best Audio Quality (Slower)</option>
-                </select>
+                  🎧 Extract Audio
+                </button>
+                <button
+                  type="button"
+                  style={{
+                    flex: 1,
+                    padding: '10px',
+                    borderRadius: '6px',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    backgroundColor: exportMode === 'video' ? 'var(--color-accent)' : 'rgba(255,255,255,0.05)',
+                    color: '#fff',
+                    border: 'none',
+                    transition: 'all 0.2s'
+                  }}
+                  onClick={() => setExportMode('video')}
+                >
+                  🎬 Trim Video
+                </button>
               </div>
 
-              <div className={styles.enhancements}>
-                <span className={styles.enhancementsTitle}>Audio Enhancements</span>
-                
-                <label className={styles.checkboxLabel}>
-                  <input 
-                    type="checkbox" 
-                    className={styles.checkbox}
-                    checked={config.normalize}
-                    onChange={(e) => setConfig(prev => ({ ...prev, normalize: e.target.checked }))}
-                  />
-                  Volume Normalization (Equalizes volume levels)
-                </label>
+              {exportMode === 'audio' ? (
+                <>
+                  <div className={styles.settingsHeader}>Extraction Parameters</div>
 
-                <label className={styles.checkboxLabel}>
-                  <input 
-                    type="checkbox" 
-                    className={styles.checkbox}
-                    checked={config.fadeIn}
-                    onChange={(e) => setConfig(prev => ({ ...prev, fadeIn: e.target.checked }))}
-                  />
-                  Apply 2s Fade-In (Smooth audio start)
-                </label>
+                  <div className={styles.formGrid}>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="format-select">Format</label>
+                      <select 
+                        id="format-select" 
+                        className={styles.select}
+                        value={config.format}
+                        onChange={(e) => setConfig(prev => ({ ...prev, format: e.target.value as VideoExtractionConfig['format'] }))}
+                      >
+                        <option value="mp3">MP3 (.mp3)</option>
+                        <option value="wav">WAV (.wav)</option>
+                        <option value="flac">FLAC (.flac)</option>
+                        <option value="aac">AAC (.aac)</option>
+                        <option value="ogg">OGG (.ogg)</option>
+                        <option value="m4a">M4A (.m4a)</option>
+                      </select>
+                    </div>
 
-                <label className={styles.checkboxLabel}>
-                  <input 
-                    type="checkbox" 
-                    className={styles.checkbox}
-                    checked={config.fadeOut}
-                    onChange={(e) => setConfig(prev => ({ ...prev, fadeOut: e.target.checked }))}
-                  />
-                  Apply 2s Fade-Out (Smooth audio end)
-                </label>
+                    <div className={styles.formGroup} style={{ opacity: config.format === 'wav' || config.format === 'flac' ? 0.5 : 1 }}>
+                      <label htmlFor="bitrate-select">Bitrate</label>
+                      <select 
+                        id="bitrate-select" 
+                        className={styles.select}
+                        disabled={config.format === 'wav' || config.format === 'flac'}
+                        value={config.bitrate}
+                        onChange={(e) => setConfig(prev => ({ ...prev, bitrate: parseInt(e.target.value) }))}
+                      >
+                        <option value={96}>96 kbps (Fast/Low)</option>
+                        <option value={128}>128 kbps (Standard)</option>
+                        <option value={192}>192 kbps (Medium-High)</option>
+                        <option value={256}>256 kbps (High)</option>
+                        <option value={320}>320 kbps (Extreme/HD)</option>
+                      </select>
+                    </div>
+                  </div>
 
-                <label className={styles.checkboxLabel}>
-                  <input 
-                    type="checkbox" 
-                    className={styles.checkbox}
-                    checked={config.preserveMetadata}
-                    onChange={(e) => setConfig(prev => ({ ...prev, preserveMetadata: e.target.checked }))}
-                  />
-                  Copy metadata tags & properties
-                </label>
-              </div>
+                  <div className={styles.formGrid}>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="samplerate-select">Sample Rate</label>
+                      <select 
+                        id="samplerate-select" 
+                        className={styles.select}
+                        value={config.sampleRate}
+                        onChange={(e) => setConfig(prev => ({ ...prev, sampleRate: parseInt(e.target.value) }))}
+                      >
+                        <option value={22050}>22,050 Hz</option>
+                        <option value={32000}>32,000 Hz</option>
+                        <option value={44100}>44,100 Hz (CD)</option>
+                        <option value={48000}>48,000 Hz (Studio)</option>
+                      </select>
+                    </div>
 
-              {/* Extraction Trigger */}
-              <button className={styles.extractBtn} onClick={handleStartExtraction}>
-                <VideoIcon size={18} /> Extract Audio Track{queue.length > 1 ? `s (${queue.length})` : ''}
+                    <div className={styles.formGroup}>
+                      <label htmlFor="channels-select">Channels</label>
+                      <select 
+                        id="channels-select" 
+                        className={styles.select}
+                        value={config.channels}
+                        onChange={(e) => setConfig(prev => ({ ...prev, channels: parseInt(e.target.value) }))}
+                      >
+                        <option value={1}>Mono</option>
+                        <option value={2}>Stereo</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label htmlFor="preset-select">Quality Preset</label>
+                    <select 
+                      id="preset-select" 
+                      className={styles.select}
+                      value={config.qualityPreset}
+                      onChange={(e) => setConfig(prev => ({ ...prev, qualityPreset: e.target.value as VideoExtractionConfig['qualityPreset'] }))}
+                    >
+                      <option value="fast">Ultrafast Encoding</option>
+                      <option value="balanced">Balanced Quality/Speed</option>
+                      <option value="best">Best Audio Quality (Slower)</option>
+                    </select>
+                  </div>
+
+                  <div className={styles.enhancements}>
+                    <span className={styles.enhancementsTitle}>Audio Enhancements</span>
+                    
+                    <label className={styles.checkboxLabel}>
+                      <input 
+                        type="checkbox" 
+                        className={styles.checkbox}
+                        checked={config.normalize}
+                        onChange={(e) => setConfig(prev => ({ ...prev, normalize: e.target.checked }))}
+                      />
+                      Volume Normalization (Equalizes volume levels)
+                    </label>
+
+                    <label className={styles.checkboxLabel}>
+                      <input 
+                        type="checkbox" 
+                        className={styles.checkbox}
+                        checked={config.fadeIn}
+                        onChange={(e) => setConfig(prev => ({ ...prev, fadeIn: e.target.checked }))}
+                      />
+                      Apply 2s Fade-In (Smooth audio start)
+                    </label>
+
+                    <label className={styles.checkboxLabel}>
+                      <input 
+                        type="checkbox" 
+                        className={styles.checkbox}
+                        checked={config.fadeOut}
+                        onChange={(e) => setConfig(prev => ({ ...prev, fadeOut: e.target.checked }))}
+                      />
+                      Apply 2s Fade-Out (Smooth audio end)
+                    </label>
+
+                    <label className={styles.checkboxLabel}>
+                      <input 
+                        type="checkbox" 
+                        className={styles.checkbox}
+                        checked={config.preserveMetadata}
+                        onChange={(e) => setConfig(prev => ({ ...prev, preserveMetadata: e.target.checked }))}
+                      />
+                      Copy metadata tags & properties
+                    </label>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className={styles.settingsHeader}>Silence Detection Settings</div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
+                    <Slider
+                      label="Silence Threshold"
+                      value={silenceConfig.threshold}
+                      min={-70}
+                      max={-10}
+                      step={0.5}
+                      displayValue={`${silenceConfig.threshold.toFixed(1)} dBFS`}
+                      onChange={(v) => setSilenceConfig(prev => ({ ...prev, threshold: v }))}
+                    />
+
+                    <Slider
+                      label="Min Silence Duration"
+                      value={silenceConfig.minSilenceDuration}
+                      min={0.1}
+                      max={10}
+                      step={0.1}
+                      unit="s"
+                      displayValue={`${silenceConfig.minSilenceDuration.toFixed(1)}s`}
+                      onChange={(v) => setSilenceConfig(prev => ({ ...prev, minSilenceDuration: v }))}
+                    />
+
+                    <Slider
+                      label="Padding Before Cut"
+                      value={silenceConfig.paddingBefore}
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      displayValue={`${(silenceConfig.paddingBefore * 1000).toFixed(0)}ms`}
+                      onChange={(v) => setSilenceConfig(prev => ({ ...prev, paddingBefore: v }))}
+                    />
+
+                    <Slider
+                      label="Padding After Cut"
+                      value={silenceConfig.paddingAfter}
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      displayValue={`${(silenceConfig.paddingAfter * 1000).toFixed(0)}ms`}
+                      onChange={(v) => setSilenceConfig(prev => ({ ...prev, paddingAfter: v }))}
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Action Trigger Button */}
+              <button type="button" className={styles.extractBtn} onClick={handleStartExtraction}>
+                <VideoIcon size={18} />
+                {exportMode === 'video'
+                  ? `Trim & Cut Video${queue.length > 1 ? 's' : ''}`
+                  : `Extract Audio Track${queue.length > 1 ? 's' : ''}`}
               </button>
             </div>
           </div>

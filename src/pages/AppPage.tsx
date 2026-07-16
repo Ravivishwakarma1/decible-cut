@@ -3,6 +3,7 @@ import styles from './AppPage.module.css';
 import { TopBar } from '../components/layout/TopBar';
 import { Sidebar } from '../components/layout/Sidebar';
 import { WaveformEditor } from '../components/waveform/WaveformEditor';
+import { TranscriptEditor } from '../components/processing/TranscriptEditor/TranscriptEditor';
 import { PlaybackControls } from '../components/playback/PlaybackControls';
 import { FileDropzone } from '../components/upload/FileDropzone';
 import { ExportPanel } from '../components/export/ExportPanel';
@@ -31,6 +32,7 @@ export const AppPage: React.FC = () => {
   const setExportOpen = useUIStore((s) => s.setExportPanelOpen);
 
   const [playbackTime, setPlaybackTime] = useState(0);
+  const [editorTab, setEditorTab] = useState<'waveform' | 'transcript'>('waveform');
 
   // Auto-save session
   useSession();
@@ -60,13 +62,58 @@ export const AppPage: React.FC = () => {
         <main className={styles.main}>
           {hasFile ? (
             <div className={styles.editorArea}>
-              {/* Waveform */}
-              <div className={styles.waveformSection}>
-                <WaveformEditor
-                  onSeek={setPlaybackTime}
-                  playbackTime={playbackTime}
-                />
+              {/* Tab Selector */}
+              <div style={{ display: 'flex', gap: '8px', padding: '12px 16px 0 16px', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(0,0,0,0.1)' }}>
+                <button
+                  type="button"
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    background: 'transparent',
+                    border: 'none',
+                    borderBottom: editorTab === 'waveform' ? '2px solid var(--color-accent)' : '2px solid transparent',
+                    color: editorTab === 'waveform' ? 'var(--color-accent)' : 'var(--color-text-muted)',
+                    transition: 'all 0.2s',
+                    outline: 'none'
+                  }}
+                  onClick={() => setEditorTab('waveform')}
+                >
+                  📈 Waveform Timeline
+                </button>
+                <button
+                  type="button"
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    background: 'transparent',
+                    border: 'none',
+                    borderBottom: editorTab === 'transcript' ? '2px solid var(--color-accent)' : '2px solid transparent',
+                    color: editorTab === 'transcript' ? 'var(--color-accent)' : 'var(--color-text-muted)',
+                    transition: 'all 0.2s',
+                    outline: 'none'
+                  }}
+                  onClick={() => setEditorTab('transcript')}
+                >
+                  📝 Transcript Editor
+                </button>
               </div>
+
+              {editorTab === 'waveform' ? (
+                <div className={styles.waveformSection}>
+                  <WaveformEditor
+                    onSeek={setPlaybackTime}
+                    playbackTime={playbackTime}
+                  />
+                </div>
+              ) : (
+                <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+                  <TranscriptEditor />
+                </div>
+              )}
             </div>
           ) : (
             <div className={styles.emptyState}>

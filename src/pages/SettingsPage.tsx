@@ -10,6 +10,7 @@ import type { Theme } from '../types/ui.types';
 export const SettingsPage: React.FC = () => {
   const settings = useSettingsStore();
 
+
   const themes: { value: Theme; label: string; icon: React.ReactNode }[] = [
     { value: 'dark', label: 'Dark', icon: <Moon size={16} /> },
     { value: 'light', label: 'Light', icon: <Sun size={16} /> },
@@ -140,6 +141,7 @@ export const SettingsPage: React.FC = () => {
             </p>
           </div>
         </section>
+
 
         {/* Danger Zone */}
         <section className={styles.section}>

@@ -8,6 +8,9 @@ import { VideoAudioPage } from './pages/VideoAudioPage';
 import { CreatorToolsPage } from './pages/CreatorToolsPage';
 import { PodcastCreatorStudioPage } from './pages/PodcastCreatorStudioPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+import { SupportPage } from './pages/SupportPage';
+import { AdminInboxPage } from './pages/AdminInboxPage';
+import { AdminLoginPage } from './pages/AdminLoginPage';
 
 export const AppRouter: React.FC = () => {
   return (
@@ -20,6 +23,9 @@ export const AppRouter: React.FC = () => {
       <Route path="/creator-tools" element={<CreatorToolsPage />} />
       <Route path="/podcast-studio" element={<PodcastCreatorStudioPage />} />
       <Route path="/privacy" element={<PrivacyPolicyPage />} />
+      <Route path="/support" element={<SupportPage />} />
+      <Route path="/admin" element={<AdminLoginPage />} />
+      <Route path="/admin/inbox" element={<AdminInboxPage />} />
     </Routes>
   );
 };

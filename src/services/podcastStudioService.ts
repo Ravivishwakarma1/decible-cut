@@ -164,7 +164,8 @@ export async function deleteLibraryAsset(asset: LibraryAsset): Promise<void> {
 export async function renderMultiTrackPodcast(
   project: PodcastProject,
   audioContext: AudioContext,
-  onProgress?: (percent: number) => void
+  onProgress?: (percent: number) => void,
+  enableDucking?: boolean
 ): Promise<AudioBuffer> {
   const db = await getStudioDB();
   
@@ -173,6 +174,7 @@ export async function renderMultiTrackPodcast(
     clip: PodcastClip;
     buffer: AudioBuffer;
     volume: number;
+    trackType: string;
   }
   
   const activeSources: ActiveSource[] = [];
@@ -201,7 +203,8 @@ export async function renderMultiTrackPodcast(
         activeSources.push({
           clip,
           buffer: decodedBuffer,
-          volume: track.volume
+          volume: track.volume,
+          trackType: track.type
         });
         
         const clipEnd = clip.startOffset + clip.duration;
@@ -220,6 +223,31 @@ export async function renderMultiTrackPodcast(
   // 2. Perform offline rendering
   onProgress?.(55);
   
+  // Merge overlapping voice intervals
+  const voiceIntervals: Array<{ start: number; end: number }> = [];
+  const voiceTracks = activeTracks.filter(t => t.type === 'voice');
+  voiceTracks.forEach(track => {
+    track.clips.forEach(clip => {
+      voiceIntervals.push({ start: clip.startOffset, end: clip.startOffset + clip.duration });
+    });
+  });
+
+  // Sort and merge voice intervals
+  voiceIntervals.sort((a, b) => a.start - b.start);
+  const mergedVoice: Array<{ start: number; end: number }> = [];
+  for (const interval of voiceIntervals) {
+    if (mergedVoice.length === 0) {
+      mergedVoice.push({ ...interval });
+    } else {
+      const last = mergedVoice[mergedVoice.length - 1];
+      if (interval.start <= last.end) {
+        last.end = Math.max(last.end, interval.end);
+      } else {
+        mergedVoice.push({ ...interval });
+      }
+    }
+  }
+
   // OfflineAudioContext can render at CD quality: 44.1kHz stereo
   const sampleRate = 44100;
   const numChannels = 2;
@@ -229,12 +257,45 @@ export async function renderMultiTrackPodcast(
     sampleRate
   );
 
-  activeSources.forEach(({ clip, buffer, volume }) => {
+  activeSources.forEach(({ clip, buffer, volume, trackType }) => {
     const sourceNode = offlineCtx.createBufferSource();
     sourceNode.buffer = buffer;
 
     const gainNode = offlineCtx.createGain();
     gainNode.gain.setValueAtTime(volume, 0);
+
+    // Apply auto-ducking on music tracks
+    if (enableDucking && trackType === 'music' && mergedVoice.length > 0) {
+      const duckVolume = volume * 0.2;
+      const attack = 0.2; // 200ms
+      const release = 0.8; // 800ms
+      
+      mergedVoice.forEach(seg => {
+        const clipStart = clip.startOffset;
+        const clipEnd = clip.startOffset + clip.duration;
+        
+        // Check if the voice segment overlaps with the music clip duration
+        if (seg.start < clipEnd && seg.end > clipStart) {
+          const fadeOutStart = Math.max(clipStart, seg.start);
+          const fadeOutEnd = Math.min(clipEnd, seg.start + attack);
+          const fadeInStart = Math.max(clipStart, seg.end);
+          const fadeInEnd = Math.min(clipEnd, seg.end + release);
+          
+          if (fadeOutStart < clipEnd) {
+            gainNode.gain.setValueAtTime(volume, fadeOutStart);
+            gainNode.gain.linearRampToValueAtTime(duckVolume, fadeOutEnd);
+          }
+          
+          if (fadeOutEnd < fadeInStart && fadeInStart < clipEnd) {
+            gainNode.gain.setValueAtTime(duckVolume, fadeInStart);
+          }
+          
+          if (fadeInStart < clipEnd) {
+            gainNode.gain.linearRampToValueAtTime(volume, fadeInEnd);
+          }
+        }
+      });
+    }
 
     sourceNode.connect(gainNode);
     gainNode.connect(offlineCtx.destination);

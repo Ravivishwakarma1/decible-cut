@@ -31,6 +31,7 @@ import { decodeAudioFile } from '../services/audioEngine';
 import { formatDuration, formatFileSize } from '../utils/formatters';
 import type { ExportProgress } from '../types/processing.types';
 import { useSEO } from '../hooks/useSEO';
+import { useDspPreview } from '../hooks/useDspPreview';
 
 export const CreatorToolsPage: React.FC = () => {
   useSEO({
@@ -56,11 +57,12 @@ export const CreatorToolsPage: React.FC = () => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.8);
   const [isMuted, setIsMuted] = useState(false);
-
+  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
+  
   // Presets and Custom overrides state
   const [selectedPreset, setSelectedPreset] = useState<CreatorPreset>(CREATOR_PRESETS[0]);
   const [customOverrides, setCustomOverrides] = useState<Partial<CreatorPreset>>({});
-  
+
   // DSP Configuration
   const [dspConfig, setDspConfig] = useState<CreatorDSPConfig>({
     loudnessNormalize: true,
@@ -78,6 +80,9 @@ export const CreatorToolsPage: React.FC = () => {
     deEsser: false,
     eqPreset: 'none',
   });
+
+  // Apply real-time DSP preview on playbacks
+  useDspPreview(audioElement, dspConfig, duration, currentTime);
 
   // AI suggestions
   const [aiSuggestions, setAiSuggestions] = useState<AISuggestions | null>(null);
@@ -231,6 +236,7 @@ export const CreatorToolsPage: React.FC = () => {
       setDuration(ws.getDuration());
       setCurrentTime(0);
       setIsPlaying(false);
+      setAudioElement(ws.getMediaElement() as HTMLAudioElement);
     });
 
     ws.on('timeupdate', (t) => {
@@ -241,6 +247,7 @@ export const CreatorToolsPage: React.FC = () => {
     ws.on('pause', () => setIsPlaying(false));
 
     return () => {
+      setAudioElement(null);
       ws.destroy();
       wavesurferRef.current = null;
     };

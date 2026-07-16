@@ -44,7 +44,7 @@ function formatTime(seconds: number): string {
 /**
  * Transcribes audio blob using Groq Whisper API
  */
-export async function transcribeWithGroq(audioBlob: Blob, apiKey: string): Promise<{ text: string; segmentsText: string }> {
+export async function transcribeWithGroq(audioBlob: Blob, apiKey: string): Promise<{ text: string; segmentsText: string; segments?: any[] }> {
   const formData = new FormData();
   formData.append('file', audioBlob, 'audio.wav');
   formData.append('model', 'whisper-large-v3');
@@ -77,7 +77,8 @@ export async function transcribeWithGroq(audioBlob: Blob, apiKey: string): Promi
 
   return {
     text: result.text,
-    segmentsText
+    segmentsText,
+    segments: result.segments
   };
 }
 

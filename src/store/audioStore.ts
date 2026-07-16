@@ -47,6 +47,10 @@ interface AudioState {
   history: HistoryEntry[];
   historyIndex: number;
 
+  // Transcript editing
+  transcriptSegments: Array<{ id: string; start: number; end: number; text: string }> | null;
+  setTranscriptSegments: (segments: Array<{ id: string; start: number; end: number; text: string }> | null) => void;
+
   // Actions
   setFile: (info: AudioFileInfo, buffer: AudioBuffer, url: string) => void;
   clearFile: () => void;
@@ -90,6 +94,7 @@ export const useAudioStore = create<AudioState>()(
     statistics: null,
     history: [],
     historyIndex: -1,
+    transcriptSegments: null,
 
     setFile: (info, buffer, url) =>
       set((state) => {
@@ -107,6 +112,7 @@ export const useAudioStore = create<AudioState>()(
         state.status = 'ready';
         state.history = [];
         state.historyIndex = -1;
+        state.transcriptSegments = null;
       }),
 
     clearFile: () =>
@@ -124,6 +130,12 @@ export const useAudioStore = create<AudioState>()(
         state.status = 'idle';
         state.history = [];
         state.historyIndex = -1;
+        state.transcriptSegments = null;
+      }),
+
+    setTranscriptSegments: (segments) =>
+      set((state) => {
+        state.transcriptSegments = segments;
       }),
 
     setConfig: (config) =>
@@ -237,6 +249,7 @@ export const useAudioStore = create<AudioState>()(
         state.processedUrl = null;
         state.history = [];
         state.historyIndex = -1;
+        state.transcriptSegments = null;
       }),
   }))
 );
