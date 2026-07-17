@@ -78,7 +78,7 @@ const AdContainer: React.FC<AdContainerProps> = ({
                   'params' : {}
                 };
               </script>
-              <script type="text/javascript" src="https://www.highperformanceformat.com/${adKey}/invoke.js"></script>
+              <script type="text/javascript" crossorigin="anonymous" src="https://www.highperformanceformat.com/${adKey}/invoke.js"></script>
             </body>
           </html>
         `);
@@ -120,6 +120,7 @@ const AdContainer: React.FC<AdContainerProps> = ({
         frameBorder="0"
         scrolling="no"
         style={{ border: 'none', overflow: 'hidden', display: 'block', margin: '0 auto' }}
+        {...({ credentialless: 'true' } as any)}
       />
     </div>
   );
@@ -140,6 +141,7 @@ const NativeAdContainer: React.FC<{ placement: keyof typeof adsConfig.placements
         const script = document.createElement('script');
         script.src = ADSTERRA_KEYS.nativeScriptUrl;
         script.async = true;
+        script.crossOrigin = 'anonymous';
         script.setAttribute('data-cfasync', 'false');
         container.appendChild(script);
       }

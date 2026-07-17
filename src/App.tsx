@@ -39,6 +39,7 @@ export const App: React.FC = () => {
         const script = document.createElement('script');
         script.src = popunderUrl;
         script.async = true;
+        script.crossOrigin = 'anonymous';
         document.head.appendChild(script);
       }
 
@@ -49,6 +50,7 @@ export const App: React.FC = () => {
         const script = document.createElement('script');
         script.src = socialUrl;
         script.async = true;
+        script.crossOrigin = 'anonymous';
         document.head.appendChild(script);
       }
     }
