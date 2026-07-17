@@ -5,6 +5,7 @@ import { useSettingsStore } from './store/settingsStore';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { ConsentBanner } from './components/ads/ConsentBanner';
 import { isGoogleBot } from './utils/isBot';
+import { adsConfig } from './config/adsConfig';
 import './styles/globals.css';
 
 export const App: React.FC = () => {
@@ -22,33 +23,32 @@ export const App: React.FC = () => {
     }
   }, [theme]);
 
-  // Dynamically load Google AdSense script depending on consent and route
+  // Dynamically load Adsterra global scripts (Popunder & Social Banner) depending on consent
   useEffect(() => {
-    const publisherId = 
-      import.meta.env.VITE_GOOGLE_ADSENSE_ID || 
-      import.meta.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID ||
-      'ca-pub-6264045340585631';
-
     const isBot = isGoogleBot();
-    
-    // Define content pages where ads are allowed to be served
-    const contentPages = ['/', '/about', '/privacy', '/creator-tools', '/podcast-studio'];
-    const isContentPage = contentPages.includes(window.location.pathname);
-
-    // Load only in production mode when consent is decided (or visitor is a crawler) and on content pages
-    const shouldLoadAdSense = 
+    const shouldLoadAds = 
       !import.meta.env.DEV && 
-      publisherId && 
-      (adConsent !== 'undecided' || isBot) &&
-      isContentPage;
+      adsConfig.enabled && 
+      (adConsent !== 'undecided' || isBot);
 
-    if (shouldLoadAdSense) {
-      const existingScript = document.querySelector('script[src*="pagead2.googlesyndication.com"]');
-      if (!existingScript) {
+    if (shouldLoadAds) {
+      // 1. Popunder Script
+      const popunderUrl = 'https://pl30400568.effectivecpmnetwork.com/b7/9e/a5/b79ea502d19af7e39fb2c69c1a486c0b.js';
+      const existingPopunder = document.querySelector(`script[src="${popunderUrl}"]`);
+      if (!existingPopunder) {
         const script = document.createElement('script');
+        script.src = popunderUrl;
         script.async = true;
-        script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`;
-        script.crossOrigin = 'anonymous';
+        document.head.appendChild(script);
+      }
+
+      // 2. Social Banner Script
+      const socialUrl = 'https://pl30400570.effectivecpmnetwork.com/f0/ba/8a/f0ba8ab934bc6140b822ec2ae111fe1f.js';
+      const existingSocial = document.querySelector(`script[src="${socialUrl}"]`);
+      if (!existingSocial) {
+        const script = document.createElement('script');
+        script.src = socialUrl;
+        script.async = true;
         document.head.appendChild(script);
       }
     }
