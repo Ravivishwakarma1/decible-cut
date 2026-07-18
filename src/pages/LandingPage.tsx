@@ -720,7 +720,7 @@ const Nav: React.FC = () => (
 export const LandingPage: React.FC = () => {
   useSEO({
     title: 'DecibelCut — Free Audio Silence Remover',
-    description: 'DecibelCut is a free, privacy-first audio editor that automatically removes silent gaps and dead air from your recordings. Runs entirely in your browser — your files never leave your device.'
+    description: 'DecibelCut is a free, privacy-first audio editor that automatically removes silent gaps and dead air from your recordings locally in the browser.'
   });
 
   return (

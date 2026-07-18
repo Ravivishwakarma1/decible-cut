@@ -1,7 +1,7 @@
 {
   "siteUrl": "https://deciblecut.vercel.app",
   "defaultTitle": "DecibelCut — Free Audio Silence Remover",
-  "defaultDescription": "DecibelCut is a free, privacy-first audio editor that automatically removes silent gaps and dead air from your recordings. Runs entirely in your browser — your files never leave your device.",
+  "defaultDescription": "DecibelCut is a free, privacy-first audio editor that automatically removes silent gaps and dead air from your recordings locally in the browser.",
   "defaultKeywords": [
     "audio silence remover",
     "remove dead air",
