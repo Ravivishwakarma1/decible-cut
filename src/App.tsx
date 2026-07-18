@@ -6,6 +6,7 @@ import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { ConsentBanner } from './components/ads/ConsentBanner';
 import { isGoogleBot } from './utils/isBot';
 import { adsConfig } from './config/adsConfig';
+import { seoConfig } from './config/seoConfig';
 import './styles/globals.css';
 
 export const App: React.FC = () => {
@@ -55,6 +56,49 @@ export const App: React.FC = () => {
       }
     }
   }, [adConsent]);
+
+  // Dynamically load Google Analytics 4 and Microsoft Clarity if configured
+  useEffect(() => {
+    // 1. Google Analytics 4 (GA4)
+    const gaId = seoConfig.analytics.googleAnalyticsId;
+    if (gaId) {
+      const gaSrcUrl = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+      const existingGa = document.querySelector(`script[src="${gaSrcUrl}"]`);
+      if (!existingGa) {
+        const script = document.createElement('script');
+        script.src = gaSrcUrl;
+        script.async = true;
+        document.head.appendChild(script);
+
+        const initScript = document.createElement('script');
+        initScript.innerHTML = `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${gaId}', { page_path: window.location.pathname });
+        `;
+        document.head.appendChild(initScript);
+      }
+    }
+
+    // 2. Microsoft Clarity
+    const clarityId = seoConfig.analytics.clarityProjectId;
+    if (clarityId) {
+      const existingClarity = document.getElementById('microsoft-clarity-script');
+      if (!existingClarity) {
+        const script = document.createElement('script');
+        script.id = 'microsoft-clarity-script';
+        script.innerHTML = `
+          (function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window,document,"clarity","script","${clarityId}");
+        `;
+        document.head.appendChild(script);
+      }
+    }
+  }, []);
 
   return (
     <BrowserRouter>

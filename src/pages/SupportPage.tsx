@@ -109,7 +109,7 @@ export const SupportPage: React.FC = () => {
         {/* Title Area */}
         <div className={styles.titleArea}>
           <span className={styles.badge}>Support Portal</span>
-          <h2 className={styles.title}>How can we help?</h2>
+          <h1 className={styles.title}>How can we help?</h1>
           <p className={styles.subtitle}>
             Have a question, preset request, or spotted a bug? Send us a message and our support team will get right back to you.
           </p>

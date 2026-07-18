@@ -1,0 +1,15 @@
+/* TEAM */
+Chef / Developer: DecibelCut Team
+Contact: support@deciblecut.vercel.app
+Site: https://deciblecut.vercel.app
+
+/* THANKS */
+Google DeepMind (Antigravity): Core AI Pair Programming Agent
+FFmpeg.js / WebAssembly Contributors: Local Audio Rendering
+Wavesurfer.js Contributors: Waveform Visualizations
+
+/* SITE */
+Standards: HTML5, CSS3, ESNext
+Technology: React 19, Vite, TypeScript, Lucide Icons, Zustand, React Router 7
+Privacy Policy: 100% Client-Side Processing, No Data Uploads
+Hosting: Vercel

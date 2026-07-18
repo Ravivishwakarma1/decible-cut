@@ -1,0 +1,18 @@
+{
+  "short_name": "DecibelCut",
+  "name": "DecibelCut — Free Audio Silence Remover",
+  "description": "Automatically remove silence and dead air from recordings locally in your browser. 100% private, client-side processing.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "display": "standalone",
+  "orientation": "portrait"
+}

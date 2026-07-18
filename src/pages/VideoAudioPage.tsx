@@ -563,7 +563,7 @@ export const VideoAudioPage: React.FC = () => {
         {/* Title Badge Area */}
         <div className={styles.titleArea}>
           <span className={styles.badge}>Toolbox</span>
-          <h2 className={styles.title}>🎬 Extract Audio from Video</h2>
+          <h1 className={styles.title}>🎬 Extract Audio from Video</h1>
           <p className={styles.subtitle}>
             Extract high-fidelity audio tracks from video files locally. Supports MP4, WebM, MOV, and MKV. Process in batches with custom bitrate, range trimming, and enhancers.
           </p>

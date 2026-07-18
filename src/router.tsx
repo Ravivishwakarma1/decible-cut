@@ -12,6 +12,7 @@ import { SupportPage } from './pages/SupportPage';
 import { AdminInboxPage } from './pages/AdminInboxPage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { AudioToTextPage } from './pages/AudioToTextPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 export const AppRouter: React.FC = () => {
   return (
@@ -28,6 +29,8 @@ export const AppRouter: React.FC = () => {
       <Route path="/support" element={<SupportPage />} />
       <Route path="/admin" element={<AdminLoginPage />} />
       <Route path="/admin/inbox" element={<AdminInboxPage />} />
+      {/* Wildcard Route for 404 Pages */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

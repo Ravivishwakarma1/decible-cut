@@ -2,12 +2,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './SettingsPage.module.css';
 import { useSettingsStore } from '../store/settingsStore';
+import { useSEO } from '../hooks/useSEO';
 
 import { KEYBOARD_SHORTCUTS, PRESETS, EXPORT_FORMATS } from '../utils/constants';
 import { ArrowLeft, Sun, Moon, Monitor } from 'lucide-react';
 import type { Theme } from '../types/ui.types';
 
 export const SettingsPage: React.FC = () => {
+  useSEO({
+    title: 'Settings',
+    description: 'Customize DecibelCut interface theme, audio export formats, and view keyboard shortcuts.',
+    robots: 'noindex, nofollow'
+  });
+
   const settings = useSettingsStore();
 
 

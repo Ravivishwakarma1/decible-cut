@@ -1,0 +1,8 @@
+# DecibelCut Security Policy
+Contact: mailto:support@deciblecut.vercel.app
+Preferred-Languages: en
+Expires: 2027-07-19T00:00:00.000Z
+Policy: https://deciblecut.vercel.app/privacy
+Encryption: 
+Hiring: 
+Acknowledgement: 

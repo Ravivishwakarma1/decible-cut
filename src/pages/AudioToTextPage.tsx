@@ -462,7 +462,7 @@ export const AudioToTextPage: React.FC = () => {
             <span className={styles.logoIcon}>⚡</span>
             <span>Decibel<strong>Cut</strong></span>
           </div>
-          <span className={styles.toolTitle}>/ Audio to Text</span>
+          <h1 className={styles.toolTitle}>/ Audio to Text</h1>
         </div>
         <div className={styles.headerRight}>
           <button 

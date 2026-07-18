@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /admin/inbox
+Disallow: /admin
 
 Sitemap: https://deciblecut.vercel.app/sitemap.xml
