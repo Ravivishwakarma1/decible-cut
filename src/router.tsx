@@ -11,6 +11,7 @@ import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { SupportPage } from './pages/SupportPage';
 import { AdminInboxPage } from './pages/AdminInboxPage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
+import { AudioToTextPage } from './pages/AudioToTextPage';
 
 export const AppRouter: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ export const AppRouter: React.FC = () => {
       <Route path="/extract-audio" element={<VideoAudioPage />} />
       <Route path="/creator-tools" element={<CreatorToolsPage />} />
       <Route path="/podcast-studio" element={<PodcastCreatorStudioPage />} />
+      <Route path="/audio-to-text" element={<AudioToTextPage />} />
       <Route path="/privacy" element={<PrivacyPolicyPage />} />
       <Route path="/support" element={<SupportPage />} />
       <Route path="/admin" element={<AdminLoginPage />} />

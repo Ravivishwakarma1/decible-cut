@@ -4,7 +4,7 @@ import styles from './LandingPage.module.css';
 import {
   Zap, Shield, Wand2, Music, FileDown, Layers,
   ArrowRight, ChevronDown, ChevronUp,
-  Scissors, Headphones, Video, Play, Pause
+  Scissors, Headphones, Video, Play, Pause, FileText
 } from 'lucide-react';
 import { BannerAd, InContentAd, FooterAd, SkyscraperAd } from '../components/ads/AdComponents';
 import { useSEO } from '../hooks/useSEO';
@@ -636,6 +636,16 @@ const Tools: React.FC = () => (
           </p>
         </Link>
 
+        <Link to="/audio-to-text" className={styles.featureCard} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <div className={styles.featureIconWrap} style={{ color: '#34d399' }}>
+            <FileText size={24} />
+          </div>
+          <h3 className={styles.featureTitle}>📝 Audio to Text</h3>
+          <p className={styles.featureDesc}>
+            Transcribe your audio and video files automatically. Export transcripts to SRT subtitles, WebVTT, TXT, JSON, or CSV formats.
+          </p>
+        </Link>
+
         <Link to="/podcast-studio" className={styles.featureCard} style={{ textDecoration: 'none', color: 'inherit' }}>
           <div className={styles.featureIconWrap} style={{ color: '#fb923c' }}>
             <Headphones size={24} />
@@ -667,6 +677,7 @@ const Footer: React.FC = () => (
           <Link to="/app" className={styles.footerLink}>Silence Remover</Link>
           <Link to="/extract-audio" className={styles.footerLink}>Extract Audio</Link>
           <Link to="/creator-tools" className={styles.footerLink}>Creator Tools</Link>
+          <Link to="/audio-to-text" className={styles.footerLink}>Audio to Text</Link>
           <Link to="/podcast-studio" className={styles.footerLink}>Podcast Studio</Link>
           <Link to="/about" className={styles.footerLink}>About</Link>
           <Link to="/support" className={styles.footerLink}>Support</Link>
@@ -693,6 +704,7 @@ const Nav: React.FC = () => (
         <Link to="/app" className={styles.navLink}>Silence Remover</Link>
         <Link to="/extract-audio" className={styles.navLink}>Extract Audio</Link>
         <Link to="/creator-tools" className={styles.navLink}>Creator Tools</Link>
+        <Link to="/audio-to-text" className={styles.navLink}>Audio to Text</Link>
         <Link to="/podcast-studio" className={styles.navLink}>Podcast Studio</Link>
         <Link to="/about" className={styles.navLink}>About</Link>
         <Link to="/support" className={styles.navLink}>Support</Link>

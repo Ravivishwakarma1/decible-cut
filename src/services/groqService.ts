@@ -44,11 +44,27 @@ function formatTime(seconds: number): string {
 /**
  * Transcribes audio blob using Groq Whisper API
  */
-export async function transcribeWithGroq(audioBlob: Blob, apiKey: string): Promise<{ text: string; segmentsText: string; segments?: any[] }> {
+export async function transcribeWithGroq(
+  audioBlob: Blob,
+  apiKey: string,
+  language?: string,
+  prompt?: string,
+  temperature?: number
+): Promise<{ text: string; segmentsText: string; segments?: any[] }> {
   const formData = new FormData();
   formData.append('file', audioBlob, 'audio.wav');
   formData.append('model', 'whisper-large-v3');
   formData.append('response_format', 'verbose_json');
+  
+  if (language && language !== 'auto') {
+    formData.append('language', language);
+  }
+  if (prompt) {
+    formData.append('prompt', prompt);
+  }
+  if (temperature !== undefined) {
+    formData.append('temperature', temperature.toString());
+  }
 
   const response = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
     method: 'POST',
@@ -60,7 +76,7 @@ export async function transcribeWithGroq(audioBlob: Blob, apiKey: string): Promi
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error?.message || `Groq Transcription failed with status ${response.status}`);
+    throw new Error(errorData.error?.message || `Transcription failed with status ${response.status}`);
   }
 
   const result = await response.json();
@@ -160,15 +176,17 @@ export async function generateRealGroqAIContent(
   buffer: AudioBuffer,
   projectName: string,
   apiKey: string,
-  onProgress?: (msg: string) => void
+  onProgress?: (msg: string) => void,
+  language?: string,
+  prompt?: string
 ): Promise<GroqAIResults> {
-  onProgress?.('Downsampling audio for AI transcription…');
+  onProgress?.('Optimizing audio file…');
   const tinyWav = await downsampleAudioBufferToWav16k(buffer);
   
-  onProgress?.('Sending audio to Groq Whisper for transcription…');
-  const { segmentsText } = await transcribeWithGroq(tinyWav, apiKey);
+  onProgress?.('Transcribing speech to text…');
+  const { segmentsText } = await transcribeWithGroq(tinyWav, apiKey, language, prompt);
   
-  onProgress?.('Post-processing transcript and metadata with LLaMA…');
+  onProgress?.('Generating summary and notes…');
   const results = await postProcessTranscriptWithGroq(segmentsText, projectName, apiKey);
   
   return results;
