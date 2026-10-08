@@ -24,7 +24,7 @@ export const App: React.FC = () => {
     }
   }, [theme]);
 
-  // Dynamically load Adsterra global scripts (Popunder & Social Banner) depending on consent
+  // Dynamically load Adsterra global script (Social Banner) depending on consent
   useEffect(() => {
     const isBot = isGoogleBot();
     const shouldLoadAds = 
@@ -33,18 +33,7 @@ export const App: React.FC = () => {
       (adConsent !== 'undecided' || isBot);
 
     if (shouldLoadAds) {
-      // 1. Popunder Script
-      const popunderUrl = 'https://pl30400568.effectivecpmnetwork.com/b7/9e/a5/b79ea502d19af7e39fb2c69c1a486c0b.js';
-      const existingPopunder = document.querySelector(`script[src="${popunderUrl}"]`);
-      if (!existingPopunder) {
-        const script = document.createElement('script');
-        script.src = popunderUrl;
-        script.async = true;
-        script.crossOrigin = 'anonymous';
-        document.head.appendChild(script);
-      }
-
-      // 2. Social Banner Script
+      // Social Banner Script
       const socialUrl = 'https://pl30400570.effectivecpmnetwork.com/f0/ba/8a/f0ba8ab934bc6140b822ec2ae111fe1f.js';
       const existingSocial = document.querySelector(`script[src="${socialUrl}"]`);
       if (!existingSocial) {
